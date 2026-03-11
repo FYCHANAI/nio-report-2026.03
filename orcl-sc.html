@@ -468,18 +468,13 @@
                 }
             });
 
-            // 载入免责声明并自动选择简体中文
+            // 載入免責聲明並強制顯示【簡體中文版】
             fetch('disclaimer.html')
                 .then(res => res.text())
                 .then(data => {
                     const c = document.getElementById('disclaimer-container');
                     if(c) {
                         c.innerHTML = data;
-                        const tab = document.getElementById('disc-tab-sc'); // SC selector
-                        if(tab) tab.checked = true;
+                        document.getElementById('disc-sc').style.display = 'block';
                     }
                 });
-        });
-    </script>
-</body>
-</html>
