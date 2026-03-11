@@ -29,7 +29,7 @@
         }
 
         .tab-btn.active {
-            border-bottom: 4px solid #2563eb; /* Blue 600 */
+            border-bottom: 4px solid #2563eb;
             color: #2563eb;
             font-weight: 700;
         }
@@ -60,7 +60,8 @@
     </style>
 </head>
 <body class="antialiased">
-<div id="pi-modal" class="fixed inset-0 z-[9999] bg-slate-900/85 backdrop-blur-sm flex flex-col items-center justify-center px-4" style="display: none;">
+
+    <div id="pi-modal" class="fixed inset-0 z-[9999] bg-slate-900/85 backdrop-blur-sm flex flex-col items-center justify-center px-4" style="display: none;">
         <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full p-6 md:p-8 relative overflow-y-auto max-h-[90vh]">
             
             <div class="text-center mb-6">
@@ -103,7 +104,6 @@
     <script>
         // PI 驗證邏輯
         document.addEventListener("DOMContentLoaded", function() {
-            // 如果 sessionStorage 裡面沒有 'pi_agreed' 的紀錄，就顯示攔截視窗並鎖定背景滾動
             if (!sessionStorage.getItem('pi_agreed')) {
                 const modal = document.getElementById('pi-modal');
                 if (modal) {
@@ -114,15 +114,12 @@
         });
 
         function acceptPI() {
-            // 記錄同意狀態到 session 中 (關閉瀏覽器前有效)
             sessionStorage.setItem('pi_agreed', 'true');
-            // 隱藏視窗並恢復背景滾動
             document.getElementById('pi-modal').style.display = 'none';
             document.body.style.overflow = 'auto';
         }
 
         function declinePI() {
-            // 拒絕時直接清空畫面並顯示拒絕訪問字樣
             document.body.innerHTML = `
                 <div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #f8fafc; font-family: sans-serif; text-align: center; padding: 20px;">
                     <h1 style="color: #e11d48; font-size: 24px; font-weight: bold; margin-bottom: 16px;">Access Denied / 拒絕訪問 / 拒绝访问</h1>
@@ -135,20 +132,6 @@
             `;
         }
     </script>
-    ```
-
-### 💡 具體要貼在哪裡？
-以你的 `orcl.html` 為例，貼完之後開頭看起來會像這樣：
-
-```html
-</head>
-<body class="antialiased">
-
-    <div id="pi-modal" class="fixed inset-0 z-[9999]... (後面省略)
-    ...
-    ...
-    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        ...
     <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div class="flex justify-between items-start">
