@@ -1,40 +1,4 @@
-<style>
-    /* CSS 語言切換邏輯 (無需 JS) */
-    .disc-content { display: none; }
-    #disc-tab-tc:checked ~ #disc-content-tc,
-    #disc-tab-sc:checked ~ #disc-content-sc,
-    #disc-tab-en:checked ~ #disc-content-en { display: block; }
-    
-    .disc-label { 
-        cursor: pointer; 
-        padding: 4px 12px; 
-        border-radius: 4px; 
-        font-size: 0.875rem; 
-        font-weight: bold; 
-        color: #64748b; /* slate-500 */
-        transition: all 0.2s ease;
-    }
-    .disc-label:hover { background-color: #f1f5f9; }
-    
-    #disc-tab-tc:checked ~ .lang-tabs label[for="disc-tab-tc"],
-    #disc-tab-sc:checked ~ .lang-tabs label[for="disc-tab-sc"],
-    #disc-tab-en:checked ~ .lang-tabs label[for="disc-tab-en"] { 
-        background-color: #e2e8f0; /* slate-200 */
-        color: #1e293b; /* slate-800 */
-    }
-</style>
-
-<input type="radio" id="disc-tab-tc" name="disc-lang" class="hidden" checked>
-<input type="radio" id="disc-tab-sc" name="disc-lang" class="hidden">
-<input type="radio" id="disc-tab-en" name="disc-lang" class="hidden">
-
-<div class="lang-tabs mb-6 flex space-x-2 border-b border-slate-200 pb-3">
-    <label for="disc-tab-tc" class="disc-label">繁體中文</label>
-    <label for="disc-tab-sc" class="disc-label">简体中文</label>
-    <label for="disc-tab-en" class="disc-label">English</label>
-</div>
-
-<div id="disc-content-tc" class="disc-content text-sm text-slate-600 leading-relaxed space-y-4 text-justify">
+<div id="disc-tc" style="display: none;" class="text-sm text-slate-600 leading-relaxed space-y-4 text-justify">
     <p class="font-bold text-slate-800">過去的表現並不能保證未來的表現。本檔僅供機構投資者及專業投資者使用。</p>
     <p>本文件僅向《證券及期貨條例》（香港法例第571章）及根據其制定的規則所定義的「專業投資者」分發、傳閱或發出。</p>
     <p>本檔僅供收件人參考，並不擬供收件人以外的任何人使用。未經俊賢資產管理有限公司（「本公司」）事先書面同意，不得將本檔全部或部分出版、傳閱、複製或分發給任何其他人。本檔內所提及的任何證券的認購、購買或出售不應被解釋為相關的要約或招攬。鑒於此類要約或招攬在該司法管轄區並不合法，或提出此類要約或招攬的人在該司法管轄區沒有資格提出此類要約或招攬，或在該司法管轄區向任何人提出此類要約或招攬屬於非法的要約或招攬，本檔並不構成對任何人於任何司法管轄區的要約或招攬。</p>
@@ -43,14 +7,13 @@
     <p>投資者不應僅根據本檔作出投資決定。投資者應參閱發售檔（如適用）以瞭解詳情，包括風險因素。</p>
     <p>本公司對本檔內容之準確性、充分性或完整性不作任何表示或保證，也不就本檔中提及的任何資訊向任何人作出建議、要約或招攬。</p>
     <p>本公司已根據《證券及期貨條例》在香港證券及期貨事務監察委員會註冊成為持牌法團，在香港開展投資管理活動。其中央編號為BMR849。本資料由本公司發出，未經證監會審閱。</p>
-    
     <div class="border-t border-slate-200 pt-4 mt-6 text-xs text-slate-500">
         <p>© 2026 俊賢資產管理有限公司 版權所有</p>
         <p class="mt-1">此中文免責條款為英文版本譯本，如中、英文兩個版本有任何抵觸或不相符之處，應以英文版本為准。</p>
     </div>
 </div>
 
-<div id="disc-content-sc" class="disc-content text-sm text-slate-600 leading-relaxed space-y-4 text-justify">
+<div id="disc-sc" style="display: none;" class="text-sm text-slate-600 leading-relaxed space-y-4 text-justify">
     <p class="font-bold text-slate-800">过去的表现并不能保证未来的表现。本档仅供机构投资者及专业投资者使用。</p>
     <p>本文件仅向《证券及期货条例》（香港法例第571章）及根据其制定的规则所定义的“专业投资者”分发、传阅或发出。</p>
     <p>本档仅供收件人参考，并不拟供收件人以外的任何人使用。未经俊贤资产管理有限公司（“本公司”）事先书面同意，不得将本档全部或部分出版、传阅、复制或分发给任何其他人。本档内所提及的任何证券的认购、购买或出售不应被解释为相关的要约或招揽。鉴于此类要约或招揽在该司法管辖区并不合法，或提出此类要约或招揽的人在该司法管辖区没有资格提出此类要约或招揽，或在该司法管辖区向任何人提出此类要约或招揽属于非法的要约或招揽，本档并不构成对任何人于任何司法管辖区的要约或招揽。</p>
@@ -59,14 +22,13 @@
     <p>投资者不应仅根据本档作出投资决定。投资者应参阅发售档（如适用）以了解详情，包括风险因素。</p>
     <p>本公司对本档内容之准确性、充分性或完整性不作任何表示或保证，也不就本档中提及的任何信息向任何人作出建议、要约或招揽。</p>
     <p>本公司已根据《证券及期货条例》在香港证券及期货事务监察委员会注册成为持牌法团，在香港开展投资管理活动。其中央编号为BMR849。本资料由本公司发出，未经证监会审阅。</p>
-    
     <div class="border-t border-slate-200 pt-4 mt-6 text-xs text-slate-500">
         <p>© 2026 俊贤资产管理有限公司 版权所有</p>
         <p class="mt-1">此中文免责条款为英文版本译本，如中、英文两个版本有任何抵触或不相符之处，应以英文版本为准。</p>
     </div>
 </div>
 
-<div id="disc-content-en" class="disc-content text-sm text-slate-600 leading-relaxed space-y-4 text-justify">
+<div id="disc-en" style="display: none;" class="text-sm text-slate-600 leading-relaxed space-y-4 text-justify">
     <p class="font-bold text-slate-800">Past performance does not guarantee future results. For institutional investors and professional investors only.</p>
     <p>This document is only distributed, circulated or issued to professional investors as defined in the Securities and Futures Ordinance (Cap.571 of The Laws of Hong Kong) (“SFO”) and its subsidiary legislation.</p>
     <p>This document is solely for information and is not intended for anyone other than the recipient. It may not be published, circulated, reproduced or distributed in whole or part to any other person without the prior written consent of Nice Talent Asset Management Limited (“NTAM”). This document should not be construed as an offer or solicitation for the subscription, purchase or sale of any securities mentioned herein. This information is not an offer or solicitation by anyone in any jurisdiction in which such offer or solicitation is not lawful or in which the person making such offer or solicitation is not qualified to do so or to anyone to whom it is unlawful to make such an offer or solicitation.</p>
@@ -75,7 +37,6 @@
     <p>Investors should not make investment decisions based on this document alone. Investors should refer to the Offering Document for details including risk factors where applicable.</p>
     <p>NTAM has no guarantee, or representation or warrant as to, its accuracy, adequacy or completeness or recommends that such information on this document.</p>
     <p>NTAM is registered as a licensed corporation under the SFO with the Securities and Futures Commission of Hong Kong to carry out investment management activities in the Hong Kong and its CE number is BMR849. This material is issued by NTAM and it has not been reviewed by the SFC.</p>
-    
     <div class="border-t border-slate-200 pt-4 mt-6 text-xs text-slate-500">
         <p>Copyright 2026. Nice Talent Asset Management Limited. All rights reserved.</p>
     </div>
