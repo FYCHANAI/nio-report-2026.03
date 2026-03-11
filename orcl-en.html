@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ORCL Research Report | NTAM Senior Analyst</title>
+    <title>Oracle (ORCL) Research Report | NTAM Senior Analyst</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
@@ -61,41 +61,50 @@
 <body class="antialiased">
 
     <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-20">
-                <div class="flex items-center space-x-3">
-                    <img src="NTAM%20Logo.png" alt="NTAM Logo" class="h-10 w-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex justify-between items-start">
+                
+                <div class="flex flex-col">
+                    <div class="flex items-center space-x-2 pb-2 mb-2 border-b border-slate-100">
+                        <img src="NTAM%20Logo.png" alt="NTAM Logo" class="h-8 w-auto">
+                        <span class="text-sm font-bold text-slate-700 tracking-wider">NICE TALENT ASSET MANAGEMENT</span>
+                    </div>
+                    
                     <div class="flex flex-col">
-                        <h1 class="text-2xl font-black text-slate-900 tracking-tight">Oracle Corp <span class="text-blue-600">ORCL</span></h1>
-                        <span class="text-sm text-slate-500 font-medium hidden md:block">NTAM In-Depth Research Report | Updated Mar 2026</span>
+                        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Oracle Corp <span class="text-blue-600">ORCL</span></h1>
+                        <span class="text-sm text-slate-500 font-medium mt-1">Senior Analyst In-Depth Research Report | Updated Mar 2026</span>
                     </div>
                 </div>
-                <div class="flex items-center space-x-4">
+                
+                <div class="flex flex-col items-end space-y-3">
                     <select onchange="window.location.href=this.value" class="bg-slate-100 border border-slate-300 text-slate-700 text-sm rounded-md px-2 py-1 outline-none cursor-pointer font-bold">
                         <option value="orcl.html">繁體中文</option>
                         <option value="orcl-sc.html">简体中文</option>
                         <option value="orcl-en.html" selected>English</option>
                     </select>
-                    <div class="text-right hidden md:block">
-                        <div class="text-xs text-slate-400">Est. Price</div>
-                        <div class="text-xl font-bold text-slate-800">$155.00 USD</div>
-                    </div>
-                    <div class="px-4 py-2 bg-emerald-100 text-emerald-800 font-bold rounded-full border border-emerald-200 text-sm md:text-base hidden sm:block">
-                        Rating: Strong Buy
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="text-right hidden sm:block">
+                            <div class="text-xs text-slate-400">Est. Price</div>
+                            <div class="text-xl font-bold text-slate-800">$155.00 USD</div>
+                        </div>
+                        <div class="px-4 py-2 bg-emerald-100 text-emerald-800 font-bold rounded-full border border-emerald-200 text-sm whitespace-nowrap">
+                            Rating: Strong Buy
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <nav class="flex space-x-8 overflow-x-auto hide-scrollbar border-t border-slate-100 mt-2" id="nav-tabs">
-                <button onclick="switchTab(event, 'summary')" class="tab-btn active whitespace-nowrap py-4 px-1 text-sm font-medium text-blue-600">I. Conclusion</button>
-                <button onclick="switchTab(event, 'financials')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">II. Financials</button>
-                <button onclick="switchTab(event, 'valuation')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">III. Valuation</button>
-                <button onclick="switchTab(event, 'sentiment')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">IV. Sentiment</button>
-                <button onclick="switchTab(event, 'technical')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">V. Technicals</button>
-                <button onclick="switchTab(event, 'risks')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">VI. Risks</button>
-                <button onclick="switchTab(event, 'scenarios')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">VII. Scenarios</button>
-                <button onclick="switchTab(event, 'recommendation')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">VIII. Strategy</button>
-                <button onclick="switchTab(event, 'disclaimer')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">IX. Disclaimer</button>
+            <nav class="flex space-x-8 overflow-x-auto hide-scrollbar border-t border-slate-100 mt-4 pt-1" id="nav-tabs">
+                <button onclick="switchTab(event, 'summary')" class="tab-btn active whitespace-nowrap py-3 px-1 text-sm font-medium text-blue-600">I. Summary</button>
+                <button onclick="switchTab(event, 'financials')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">II. Financials</button>
+                <button onclick="switchTab(event, 'valuation')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">III. Valuation</button>
+                <button onclick="switchTab(event, 'sentiment')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">IV. Sentiment</button>
+                <button onclick="switchTab(event, 'technical')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">V. Technicals</button>
+                <button onclick="switchTab(event, 'risks')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">VI. Risks</button>
+                <button onclick="switchTab(event, 'scenarios')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">VII. Scenarios</button>
+                <button onclick="switchTab(event, 'recommendation')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">VIII. Strategy</button>
+                <button onclick="switchTab(event, 'disclaimer')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">IX. Disclaimer</button>
             </nav>
         </div>
     </header>
@@ -182,7 +191,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div class="lg:col-span-2 metric-card">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold text-slate-800">Historical Revenue & EPS</h3>
+                        <h3 class="text-lg font-bold text-slate-800">Historical Revenue & EPS Trends</h3>
                         <span class="text-xs bg-slate-100 px-2 py-1 rounded text-slate-500">Unit: Billions / $</span>
                     </div>
                     <div class="chart-container">
@@ -194,7 +203,7 @@
                     <div class="metric-card">
                         <h3 class="text-md font-bold text-slate-800 mb-3 border-b pb-2">Trend Analysis</h3>
                         <div class="text-center py-3 bg-blue-100 rounded mb-3">
-                            <span class="text-lg font-black text-blue-800">Accelerating</span>
+                            <span class="text-lg font-black text-blue-800">Accelerating Growth</span>
                         </div>
                         <p class="text-sm text-slate-600"><strong>Rationale:</strong> EPS QoQ growth outpacing revenue highlights powerful operating leverage. Remaining Performance Obligations (RPO) hit a record >$85B (YoY +35%), severely de-risking the next 4-6 quarters.</p>
                     </div>
@@ -250,7 +259,7 @@
             </div>
 
             <div class="metric-card">
-                <h3 class="text-lg font-bold text-slate-800 mb-4">Peer Valuation (Forward P/E)</h3>
+                <h3 class="text-lg font-bold text-slate-800 mb-4">Peer Comps (Forward P/E)</h3>
                 <div class="chart-container" style="height: 300px; max-height: 350px;">
                     <canvas id="valuationChart"></canvas>
                 </div>
@@ -285,7 +294,7 @@
             
             <div class="metric-card">
                 <h4 class="text-sm font-bold text-slate-700">Social & Retail Pulse (Reddit / X)</h4>
-                <p class="text-sm text-slate-600 mt-2">Current Sentiment: <span class="font-bold text-blue-600">Bullish but not euphoric</span>. Regarded widely as a "Value AI Play." Unlike NVDA, ORCL offers defensive characteristics, keeping the trade uncrowded.</p>
+                <p class="text-sm text-slate-600 mt-2">Current Sentiment: <span class="font-bold text-blue-600">Bullish but not crowded</span>. Regarded widely as a "Value AI Play." Unlike NVDA, ORCL offers defensive characteristics, keeping the trade uncrowded.</p>
             </div>
         </section>
 
@@ -435,7 +444,7 @@
             </div>
             <div class="metric-card bg-slate-50 border-slate-200" id="disclaimer-container">
                 <div class="text-center py-10">
-                    <p class="text-sm text-slate-500 animate-pulse font-bold">Loading Disclaimer...</p>
+                    <p class="text-sm text-slate-500 animate-pulse font-bold">Loading Disclaimer, please wait...</p>
                 </div>
             </div>
         </section>
@@ -443,7 +452,7 @@
     </main>
 
     <script>
-        // --- 1. Tab Navigation Logic ---
+        // --- 1. Tab Navigation Logic (防呆版修正) ---
         function switchTab(e, tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => {
@@ -514,7 +523,7 @@
                 }
             });
 
-            // 讀入免責聲明並指定顯示英文 (#disc-en)
+            // Read Disclaimer and force English visibility
             fetch('disclaimer.html')
                 .then(res => res.text())
                 .then(data => {
