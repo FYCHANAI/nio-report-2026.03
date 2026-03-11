@@ -6,15 +6,54 @@
     <title>甲骨文 (ORCL) 深度研究报告 | NTAM 资深分析师</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; background-color: #f8fafc; color: #1e293b; }
-        .chart-container { position: relative; width: 100%; max-width: 800px; margin: 0 auto; height: 350px; max-height: 400px; }
-        @media (min-width: 768px) { .chart-container { height: 400px; } }
-        .tab-btn.active { border-bottom: 4px solid #2563eb; color: #2563eb; font-weight: 700; }
-        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f8fafc; 
+            color: #1e293b; 
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-container { height: 400px; }
+        }
+
+        .tab-btn.active {
+            border-bottom: 4px solid #2563eb;
+            color: #2563eb;
+            font-weight: 700;
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
         .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .metric-card { background: white; border-radius: 0.75rem; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #e2e8f0; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -48,15 +87,15 @@
             </div>
             
             <nav class="flex space-x-8 overflow-x-auto hide-scrollbar border-t border-slate-100 mt-2" id="nav-tabs">
-                <button onclick="switchTab('summary')" class="tab-btn active whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500">一. 投资结论</button>
-                <button onclick="switchTab('financials')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500">二. 财务业绩</button>
-                <button onclick="switchTab('valuation')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500">三. 估值与共识</button>
-                <button onclick="switchTab('sentiment')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500">四. 市场情绪</button>
-                <button onclick="switchTab('technical')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500">五. 技术面</button>
-                <button onclick="switchTab('risks')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500">六. 风险因素</button>
-                <button onclick="switchTab('scenarios')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500">七. 情境分析</button>
-                <button onclick="switchTab('recommendation')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500">八. 最终建议</button>
-                <button onclick="switchTab('disclaimer')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500">九. 免责声明</button>
+                <button onclick="switchTab(event, 'summary')" class="tab-btn active whitespace-nowrap py-4 px-1 text-sm font-medium text-blue-600">一. 投资结论</button>
+                <button onclick="switchTab(event, 'financials')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">二. 财务业绩</button>
+                <button onclick="switchTab(event, 'valuation')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">三. 估值与共识</button>
+                <button onclick="switchTab(event, 'sentiment')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">四. 市场情绪</button>
+                <button onclick="switchTab(event, 'technical')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">五. 技术面</button>
+                <button onclick="switchTab(event, 'risks')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">六. 风险因素</button>
+                <button onclick="switchTab(event, 'scenarios')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">七. 情境分析</button>
+                <button onclick="switchTab(event, 'recommendation')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">八. 最终建议</button>
+                <button onclick="switchTab(event, 'disclaimer')" class="tab-btn whitespace-nowrap py-4 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">九. 免责声明</button>
             </nav>
         </div>
     </header>
@@ -162,7 +201,7 @@
                     
                     <div class="metric-card">
                         <h3 class="text-md font-bold text-slate-800 mb-3 border-b pb-2">Earnings Call 重点</h3>
-                        <ul class="text-xs text-slate-600 list-disc list-inside mt-1 space-y-2">
+                        <ul class="text-sm text-slate-600 list-disc list-inside mt-1 space-y-2">
                             <li><span class="font-bold text-emerald-600">利多：</span>全球 AI 主权云 (Sovereign Cloud) 签约量大幅超预期。</li>
                             <li><span class="font-bold text-emerald-600">利多：</span>多云互连协议推动了传统数据库向云端迁移的速度。</li>
                             <li><span class="font-bold text-rose-600">风险：</span>数据中心建设的资本支出 (CAPEX) 将大幅增加，短期压缩现金流。</li>
@@ -229,17 +268,17 @@
                     <li class="border-l-2 border-emerald-500 pl-3">
                         <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">利多</span>
                         <span class="text-sm font-bold text-slate-800 ml-2">扩大与 NVIDIA 合作部署超级电脑</span>
-                        <p class="text-xs text-slate-500 mt-1">强化了“AI 卖铲人”认知，带动云端业务重评。</p>
+                        <p class="text-sm text-slate-500 mt-1">强化了“AI 卖铲人”认知，带动云端业务重评。</p>
                     </li>
                     <li class="border-l-2 border-emerald-500 pl-3">
                         <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">利多</span>
                         <span class="text-sm font-bold text-slate-800 ml-2">Google Cloud 与 ORCL 达成跨云整合协议</span>
-                        <p class="text-xs text-slate-500 mt-1">消除被竞争对手孤立的风险，确认其不可替代性。</p>
+                        <p class="text-sm text-slate-500 mt-1">消除被竞争对手孤立的风险，确认其不可替代性。</p>
                     </li>
                     <li class="border-l-2 border-slate-400 pl-3">
                         <span class="text-xs font-bold bg-slate-100 text-slate-800 px-2 py-0.5 rounded">中性</span>
                         <span class="text-sm font-bold text-slate-800 ml-2">宣布大幅提升未来两年 CAPEX </span>
-                        <p class="text-xs text-slate-500 mt-1">证明需求强劲，但短期引发自由现金流下降担忧。</p>
+                        <p class="text-sm text-slate-500 mt-1">证明需求强劲，但短期引发自由现金流下降担忧。</p>
                     </li>
                 </ul>
             </div>
@@ -404,11 +443,16 @@
     </main>
 
     <script>
-        function switchTab(tabId) {
+        // 修正後的 Tab 切換邏輯 (防呆版)
+        function switchTab(e, tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active', 'border-blue-600', 'text-blue-600');
+                el.classList.add('text-slate-500');
+            });
             document.getElementById(tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
+            e.currentTarget.classList.remove('text-slate-500');
+            e.currentTarget.classList.add('active', 'border-blue-600', 'text-blue-600');
         }
 
         function showScenario(type) {
@@ -468,15 +512,15 @@
                 }
             });
 
-            // 载入免责声明并自动选择简体中文
+            // 读入免责声明并指定显示简体中文 (#disc-sc)
             fetch('disclaimer.html')
                 .then(res => res.text())
                 .then(data => {
                     const c = document.getElementById('disclaimer-container');
                     if(c) {
                         c.innerHTML = data;
-                        const tab = document.getElementById('disc-tab-sc'); // SC selector
-                        if(tab) tab.checked = true;
+                        const sc = document.getElementById('disc-sc');
+                        if(sc) sc.style.display = 'block';
                     }
                 });
         });
