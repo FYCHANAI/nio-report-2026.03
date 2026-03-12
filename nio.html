@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蔚來汽車 (NIO) 深度研究報告 | NTAM 資深分析師</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .chart-container { position: relative; width: 100%; max-width: 800px; margin: 0 auto; height: 350px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 400px; } }
+        .tab-btn.active { border-bottom: 4px solid #2563eb; color: #2563eb; font-weight: 700; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .metric-card { background: white; border-radius: 0.75rem; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #e2e8f0; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div id="pi-modal" class="fixed inset-0 z-[9999] bg-slate-900/85 backdrop-blur-sm flex flex-col items-center justify-center px-4" style="display: none;">
+        <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full p-6 md:p-8 relative overflow-y-auto max-h-[90vh]">
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-rose-100 text-rose-600 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                </div>
+                <h2 class="text-2xl font-black text-slate-900 mb-2">Important Notice / 重要聲明 / 重要声明</h2>
+            </div>
+            <div class="space-y-6 text-sm text-slate-600 leading-relaxed text-justify mb-8">
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <p class="font-bold text-slate-800 mb-1">僅供專業投資者使用 (Professional Investors Only)</p>
+                    <p>本網站及報告之內容僅供香港《證券及期貨條例》（香港法例第571章）及其附屬法例所定義之「專業投資者」查閱。點擊「我確認」即表示您聲明並保證您具備專業投資者資格。若您並非專業投資者，請立即點擊「拒絕」並離開此頁面。</p>
+                </div>
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <p class="font-bold text-slate-800 mb-1">仅供专业投资者使用 (Professional Investors Only)</p>
+                    <p>本网站及报告之内容仅供香港《证券及期货条例》（香港法例第571章）及其附属法例所定义之“专业投资者”查阅。点击“我确认”即表示您声明并保证您具备专业投资者资格。若您并非专业投资者，请立即点击“拒绝”并离开此页面。</p>
+                </div>
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <p class="font-bold text-slate-800 mb-1">For Professional Investors Only</p>
+                    <p>The content of this website and report is strictly distributed to and intended for "Professional Investors" only, as defined in the Securities and Futures Ordinance (Cap. 571 of the Laws of Hong Kong) and its subsidiary legislation. By clicking "I Confirm", you declare and warrant that you qualify as a Professional Investor. If you are not a Professional Investor, please click "Decline" and exit this page immediately.</p>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mt-6 pt-6 border-t border-slate-200">
+                <button onclick="declinePI()" class="px-6 py-3 rounded-lg font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors w-full sm:w-auto">拒絕 / Decline</button>
+                <button onclick="acceptPI()" class="px-8 py-3 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-blue-500/30 transition-all w-full sm:w-auto">我確認 I Confirm</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (!sessionStorage.getItem('pi_agreed')) {
+                const modal = document.getElementById('pi-modal');
+                if (modal) { modal.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+            }
+        });
+        function acceptPI() { sessionStorage.setItem('pi_agreed', 'true'); document.getElementById('pi-modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
+        function declinePI() {
+            document.body.innerHTML = `<div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #f8fafc; font-family: sans-serif; text-align: center; padding: 20px;"><h1 style="color: #e11d48; font-size: 24px; font-weight: bold; margin-bottom: 16px;">Access Denied / 拒絕訪問 / 拒绝访问</h1><p style="color: #475569; max-width: 500px; line-height: 1.6;">This content is restricted to Professional Investors only.<br>本內容僅限專業投資者查看。<br>本内容仅限专业投资者查看。</p></div>`;
+        }
+    </script>
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex justify-between items-start">
+                
+                <div class="flex flex-col">
+                    <div class="flex items-center space-x-2 pb-2 mb-2 border-b border-slate-100">
+                        <img src="NTAM%20Logo.png" alt="NTAM Logo" class="h-8 w-auto">
+                        <span class="text-sm font-bold text-slate-700 tracking-wider">NICE TALENT ASSET MANAGEMENT</span>
+                    </div>
+                    
+                    <div class="flex flex-col">
+                        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">蔚來汽車 <span class="text-blue-600">NIO</span></h1>
+                        <span class="text-sm text-slate-500 font-medium mt-1">資深分析師 深度研究報告 | 2026年3月更新</span>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col items-end space-y-3">
+                    <select onchange="window.location.href=this.value" class="bg-slate-100 border border-slate-300 text-slate-700 text-sm rounded-md px-2 py-1 outline-none cursor-pointer font-bold">
+                        <option value="nio.html" selected>繁體中文</option>
+                        <option value="nio-sc.html">简体中文</option>
+                        <option value="nio-en.html">English</option>
+                    </select>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="text-right hidden sm:block">
+                            <div class="text-xs text-slate-400">目前預估價</div>
+                            <div class="text-xl font-bold text-slate-800">$5.80 USD</div>
+                        </div>
+                        <div class="px-4 py-2 bg-emerald-100 text-emerald-800 font-bold rounded-full border border-emerald-200 text-sm whitespace-nowrap">
+                            評級：買入 (Buy)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="flex space-x-8 overflow-x-auto hide-scrollbar border-t border-slate-100 mt-4 pt-1" id="nav-tabs">
+                <button onclick="switchTab(event, 'summary')" class="tab-btn active whitespace-nowrap py-3 px-1 text-sm font-medium text-blue-600">一. 投資結論</button>
+                <button onclick="switchTab(event, 'financials')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">二. 財務業績</button>
+                <button onclick="switchTab(event, 'valuation')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">三. 估值與共識</button>
+                <button onclick="switchTab(event, 'sentiment')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">四. 市場情緒</button>
+                <button onclick="switchTab(event, 'technical')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">五. 技術面</button>
+                <button onclick="switchTab(event, 'risks')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">六. 風險因素</button>
+                <button onclick="switchTab(event, 'scenarios')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">七. 情境分析</button>
+                <button onclick="switchTab(event, 'recommendation')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">八. 最終建議</button>
+                <button onclick="switchTab(event, 'disclaimer')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">九. 免責聲明</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <section id="summary" class="tab-content active">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">執行摘要 (Executive Summary)</h2>
+                <p class="mt-2 text-slate-600">隨著子品牌「樂道 (ONVO)」與「螢火蟲 (Firefly)」全面交付，NIO 正從高階利基市場成功切入大眾市場。換電聯盟 (BaaS) 的擴大為其帶來獨特的護城河與長尾收入。</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="metric-card">
+                        <h3 class="text-lg font-bold text-slate-800 mb-4">一、投資結論</h3>
+                        <div class="flex flex-wrap items-center mb-4 gap-2">
+                            <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded font-semibold text-sm">投資評級：買入 (Buy)</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded font-semibold text-sm">目標價區間：$7.00 - $8.50</span>
+                            <span class="px-3 py-1 bg-slate-100 text-slate-800 rounded font-semibold text-sm">置信度：7.5 / 10</span>
+                        </div>
+                        <p class="text-sm text-slate-600 mb-4 font-semibold">機會屬性：<span class="text-blue-600">困境反轉 + 銷量爆發</span></p>
+                        
+                        <h4 class="font-bold text-slate-700 mt-4 mb-2">3 個最核心理由：</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-slate-600 text-sm md:text-base">
+                            <li><strong>多品牌矩陣發力：</strong> 樂道 L60 產能瓶頸解除，月交付量穩步突破 2 萬台，大幅分攤了固定的研發與銷售費用。</li>
+                            <li><strong>換電網絡 (BaaS) 變現：</strong> 與長安、吉利等巨頭的換電合作開始落地，將沉重的 CAPEX 轉化為穩定的服務現金流與行業標準。</li>
+                            <li><strong>整車毛利率拐點：</strong> 受惠於電池成本下降與規模效應，整體汽車毛利率正穩步向 15% 的健康水位邁進。</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="metric-card text-center">
+                        <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wide mb-2">平均目標價預期</h3>
+                        <div class="text-4xl font-black text-slate-800 mb-1">$7.50</div>
+                        <div class="text-sm text-emerald-600 font-bold mb-4">潛在上漲空間: +29%</div>
+                        <div class="text-xs text-slate-400">基於華爾街分析師平均共識</div>
+                        <div class="mt-4 w-full bg-slate-200 rounded-full h-2.5">
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: 29%"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-slate-400 mt-1">
+                            <span>現價 $5.80</span>
+                            <span>目標 $7.50</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">二、財務業績回顧與展望</h2>
+                <p class="mt-2 text-slate-600">最新季度財報顯示交付量與毛利率呈現雙增長的良性循環。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="metric-card">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase">總交付量 (Q4)</h4>
+                    <p class="text-2xl font-bold text-slate-800 mt-1">72,500 輛</p>
+                    <p class="text-sm text-emerald-600 font-semibold mt-1">YoY: +45%</p>
+                    <p class="text-xs text-slate-400 mt-2">創單季歷史新高</p>
+                </div>
+                <div class="metric-card">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase">整車毛利率 (Vehicle Margin)</h4>
+                    <p class="text-2xl font-bold text-slate-800 mt-1">13.1%</p>
+                    <p class="text-sm text-emerald-600 font-semibold mt-1">較上季提升 1.2%</p>
+                    <p class="text-xs text-slate-400 mt-2">受惠於電池成本下降</p>
+                </div>
+                <div class="metric-card bg-blue-50">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase">下季交付指引 (Q1 預估)</h4>
+                    <p class="text-2xl font-bold text-blue-800 mt-1">65k - 68k</p>
+                    <p class="text-sm text-slate-600 font-semibold mt-1">淡季不淡</p>
+                    <p class="text-xs text-slate-500 mt-2">樂道產能持續爬坡</p>
+                </div>
+                <div class="metric-card bg-slate-100">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase">自由現金流 (FCF)</h4>
+                    <p class="text-xl font-bold text-slate-800 mt-1">逐步改善</p>
+                    <p class="text-sm text-emerald-600 font-semibold mt-1">中東主權基金注資保障</p>
+                    <p class="text-xs text-slate-500 mt-2">現金儲備充裕</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 metric-card">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-slate-800">歷史交付量與毛利率趨勢</h3>
+                        <span class="text-xs bg-slate-100 px-2 py-1 rounded text-slate-500">單位: 千輛 / %</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="financialChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="metric-card">
+                        <h3 class="text-md font-bold text-slate-800 mb-3 border-b pb-2">業績趨勢判斷</h3>
+                        <div class="text-center py-3 bg-blue-100 rounded mb-3">
+                            <span class="text-lg font-black text-blue-800">規模效應顯現</span>
+                        </div>
+                        <p class="text-sm text-slate-600"><strong>判斷依據：</strong> 過去蔚來深受「高定價、低銷量」之苦，如今憑藉樂道品牌的下沉市場策略，銷量基數大幅擴大，有效攤提了龐大的換電站與研發折舊費用。</p>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <h3 class="text-md font-bold text-slate-800 mb-3 border-b pb-2">Earnings Call 重點</h3>
+                        <ul class="text-sm text-slate-600 list-disc list-inside mt-1 space-y-2">
+                            <li><span class="font-bold text-emerald-600">利多：</span>阿聯酋 CYVN 的戰略投資確保了未來兩年的研發資金。</li>
+                            <li><span class="font-bold text-emerald-600">利多：</span>NOP+ 自動駕駛訂閱率超出內部預期。</li>
+                            <li><span class="font-bold text-rose-600">風險：</span>歐盟關稅政策對「螢火蟲」品牌出海計畫造成短期阻力。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="valuation" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">三、估值與市場共識</h2>
+                <p class="mt-2 text-slate-600">由於新能源車企多處於微利或虧損階段，業界主要採用 Forward P/S (市銷率) 進行同業比較。</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="metric-card">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">分析師一致目標價分布</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-3 bg-slate-50 rounded">
+                            <span class="text-slate-600 font-medium">最高目標價 (Bull)</span>
+                            <span class="text-lg font-bold text-emerald-600">$10.00</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-blue-50 rounded border border-blue-100">
+                            <span class="text-slate-800 font-bold">平均目標價 (Consensus)</span>
+                            <span class="text-xl font-black text-blue-700">$7.50</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-slate-50 rounded">
+                            <span class="text-slate-600 font-medium">最低目標價 (Bear)</span>
+                            <span class="text-lg font-bold text-rose-600">$4.20</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-100 text-sm">
+                        <p><strong>評級分布：</strong> 買入 (55%) / 持有 (35%) / 賣出 (10%)</p>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">估值結論與分析</h3>
+                    <p class="text-xl font-bold text-blue-600 mb-2">結論：具備安全邊際 (Value Zone)</p>
+                    <div class="space-y-3 text-sm text-slate-600">
+                        <p>目前 NIO 的 Forward P/S 僅約 1.1x，遠低於理想汽車 (Li Auto) 的 1.8x 與小鵬 (XPeng) 的 1.5x。市場先前對其沉重的換電站 CAPEX 感到悲觀，給予了估值懲罰。</p>
+                        <p>然而，隨著樂道銷量放量以及換電聯盟的建立，NIO 的商業模式正在被市場重新定價。若連續兩個季度證明毛利率能企穩在 15% 以上，估值倍數有望向小鵬 (1.5x) 靠攏，推動股價上行。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <h3 class="text-lg font-bold text-slate-800 mb-4">造車新勢力估值比較 (Forward P/S)</h3>
+                <div class="chart-container" style="height: 300px; max-height: 350px;">
+                    <canvas id="valuationChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="sentiment" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">四、市場情緒面分析</h2>
+            </div>
+
+            <div class="metric-card mb-6">
+                <h3 class="text-lg font-bold text-slate-800 mb-4">過去 30 天重要消息</h3>
+                <ul class="space-y-4">
+                    <li class="border-l-2 border-emerald-500 pl-3">
+                        <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">利多</span>
+                        <span class="text-sm font-bold text-slate-800 ml-2">樂道 L60 單月大定數量突破內部預期</span>
+                        <p class="text-sm text-slate-500 mt-1">確認了蔚來在 20-25 萬人民幣價格帶的競爭力。</p>
+                    </li>
+                    <li class="border-l-2 border-emerald-500 pl-3">
+                        <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">利多</span>
+                        <span class="text-sm font-bold text-slate-800 ml-2">第四代換電站正式大規模鋪設</span>
+                        <p class="text-sm text-slate-500 mt-1">相容多品牌，宣告蔚來換電聯盟進入實質營運階段。</p>
+                    </li>
+                    <li class="border-l-2 border-rose-500 pl-3">
+                        <span class="text-xs font-bold bg-rose-100 text-rose-800 px-2 py-0.5 rounded">利空</span>
+                        <span class="text-sm font-bold text-slate-800 ml-2">歐盟敲定中國電動車最終反補貼關稅</span>
+                        <p class="text-sm text-slate-500 mt-1">打壓了 NIO 在歐洲市場的短期擴張預期。</p>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="metric-card">
+                <h4 class="text-sm font-bold text-slate-700">社交平台風向 (微博 / 懂車帝 / X)</h4>
+                <p class="text-sm text-slate-600 mt-2">目前情緒：<span class="font-bold text-blue-600">中性偏多 (Cautiously Bullish)</span>。消費者對樂道的產品力評價極高，但資本市場仍觀望其產能爬坡的實際交付數據。屬於「見到數據才願意追高」的狀態。</p>
+            </div>
+        </section>
+
+        <section id="technical" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">五、技術面分析</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="metric-card">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">動能指標</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-slate-50 rounded text-center border border-slate-100">
+                            <div class="text-xs font-bold text-slate-500 mb-1">RSI (14)</div>
+                            <div class="text-2xl font-black text-slate-800">54.2</div>
+                            <div class="text-sm font-semibold text-slate-600">中性整理區間</div>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded text-center border border-slate-100">
+                            <div class="text-xs font-bold text-slate-500 mb-1">MACD</div>
+                            <div class="text-lg font-black text-emerald-600">零軸上糾纏</div>
+                            <div class="text-sm font-semibold text-slate-600">等待方向突破</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">均線結構與關鍵點位</h3>
+                    <div class="space-y-3 text-sm text-slate-600">
+                        <ul class="list-none space-y-2">
+                            <li>• <strong class="text-blue-600">築底完成</strong>：股價在 $5.00 附近形成堅實的雙底支撐。</li>
+                            <li>• 目前正挑戰 120 日半年線壓力 ($6.10)。</li>
+                            <li>• 若帶量突破 $6.20，上方真空區可直達 $7.50。</li>
+                        </ul>
+                        
+                        <div class="flex justify-between mt-4 p-4 bg-slate-800 text-white rounded-lg">
+                            <div>
+                                <span class="block text-xs text-slate-400">強支撐位 (S1)</span>
+                                <span class="font-bold text-emerald-400 text-lg">$5.20</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-xs text-slate-400">壓力位 (R1 / R2)</span>
+                                <span class="font-bold text-rose-400 text-lg">$6.20 / $7.50</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="risks" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">六、風險因素</h2>
+            </div>
+
+            <div class="metric-card">
+                <h3 class="text-lg font-bold text-slate-800 mb-4 text-rose-600">關鍵風險因素 (按嚴重度排序)</h3>
+                <ol class="space-y-4 list-decimal list-inside text-sm text-slate-700">
+                    <li class="pb-3 border-b border-slate-100">
+                        <strong class="text-rose-700 text-base">國內價格戰加劇 (最高風險)：</strong> 比亞迪、特斯拉若再次發起激進降價，將迫使樂道壓縮利潤空間以保住市佔率。
+                    </li>
+                    <li class="pb-3 border-b border-slate-100">
+                        <strong class="text-base">產能地獄重演：</strong> 蔚來過去多次在新車型上市時遭遇供應鏈問題，若樂道 L60 無法如期交付，將嚴重打擊市場信心。
+                    </li>
+                    <li class="pb-3 border-b border-slate-100">
+                        <strong class="text-base">地緣政治與關稅：</strong> 歐美對中國電動車的關稅壁壘，將限制 NIO 與 Firefly 的全球化擴張進程。
+                    </li>
+                    <li class="pb-3 border-b border-slate-100">
+                        <strong class="text-base">持續燒錢導致稀釋：</strong> 若換電網絡與研發支出未見收斂，未來仍有增發新股融資的風險。
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="scenarios" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">七、情境分析 (Scenario Analysis)</h2>
+            </div>
+
+            <div class="metric-card bg-slate-900 text-white border-none">
+                <div class="flex space-x-2 mb-6 bg-slate-800 p-1 rounded-lg w-full max-w-md mx-auto">
+                    <button onclick="showScenario('bull')" id="btn-bull" class="flex-1 py-2 text-sm font-bold text-slate-300 rounded hover:bg-slate-700 transition">牛市</button>
+                    <button onclick="showScenario('base')" id="btn-base" class="flex-1 py-2 text-sm font-bold bg-blue-600 text-white rounded shadow transition">基準</button>
+                    <button onclick="showScenario('bear')" id="btn-bear" class="flex-1 py-2 text-sm font-bold text-slate-300 rounded hover:bg-slate-700 transition">熊市</button>
+                </div>
+
+                <div id="scenario-bull" class="scenario-panel hidden max-w-2xl mx-auto text-center">
+                    <h4 class="text-2xl font-black text-emerald-400 mb-4">牛市情境 (Bull) - 目標價: $10.00</h4>
+                    <ul class="text-sm space-y-4 text-slate-300 text-left bg-slate-800 p-6 rounded-lg">
+                        <li><span class="font-bold text-slate-100 block mb-1">觸發條件：</span> 樂道月交付穩定破 2.5 萬台；NIO 主品牌毛利率突破 18%；發布完全自動駕駛 FSD 競爭產品。</li>
+                        <li><span class="font-bold text-slate-100 block mb-1">財務影響：</span> 提前實現全公司單季 Non-GAAP 盈虧平衡。</li>
+                        <li><span class="font-bold text-slate-100 block mb-1">股價反應：</span> 估值倍數向理想汽車看齊，P/S 修復至 1.8x 以上。</li>
+                    </ul>
+                </div>
+
+                <div id="scenario-base" class="scenario-panel block max-w-2xl mx-auto text-center">
+                    <h4 class="text-2xl font-black text-blue-400 mb-4">基準情境 (Base) - 目標價: $7.50</h4>
+                    <ul class="text-sm space-y-4 text-slate-300 text-left bg-slate-800 p-6 rounded-lg">
+                        <li><span class="font-bold text-slate-100 block mb-1">觸發條件：</span> 樂道穩步交付，主品牌銷量持平；換電合作夥伴按計畫接入網絡。</li>
+                        <li><span class="font-bold text-slate-100 block mb-1">財務影響：</span> 虧損顯著收窄，現金流維持健康，無須短期融資。</li>
+                        <li><span class="font-bold text-slate-100 block mb-1">股價反應：</span> 消除破產與極端悲觀定價，P/S 穩定在 1.3x-1.5x。</li>
+                    </ul>
+                </div>
+
+                <div id="scenario-bear" class="scenario-panel hidden max-w-2xl mx-auto text-center">
+                    <h4 class="text-2xl font-black text-rose-400 mb-4">熊市情境 (Bear) - 目標價: $4.00</h4>
+                    <ul class="text-sm space-y-4 text-slate-300 text-left bg-slate-800 p-6 rounded-lg">
+                        <li><span class="font-bold text-slate-100 block mb-1">觸發條件：</span> 國內爆發慘烈價格戰；樂道遭競品圍剿導致訂單流失。</li>
+                        <li><span class="font-bold text-slate-100 block mb-1">財務影響：</span> 毛利率再次跌破 10%，虧損擴大，引發市場對其現金流枯竭的擔憂。</li>
+                        <li><span class="font-bold text-slate-100 block mb-1">股價反應：</span> 資金出逃，估值下殺至 0.8x P/S 以下。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="recommendation" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">八、最終投資建議 (Final Recommendation)</h2>
+            </div>
+
+            <div class="metric-card bg-slate-900 text-white border-none p-6 md:p-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm md:text-base">
+                    <div>
+                        <p class="text-slate-400 mb-2 font-bold">核心邏輯：</p>
+                        <p class="mb-6 leading-relaxed">最壞的時刻（高研發、低轉換、產能瓶頸）已經過去。現在是 NIO 將前期龐大的基建投資（換電站、智駕研發）轉化為大眾市場銷量（ONVO/Firefly）的收成期。</p>
+                        
+                        <p class="text-slate-400 mb-2 font-bold">主要催化劑 (1-3個月)：</p>
+                        <p class="mb-6 leading-relaxed">每月 1 號的交付數據公布（關注樂道佔比），以及新一代旗艦轎車 ET9 的正式上市。</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-400 mb-2 font-bold">建議策略：</p>
+                        <p class="mb-6 font-bold text-emerald-400 text-xl">於 $5.50 - $5.80 區間分批建倉，設立 $4.80 止損位。</p>
+
+                        <p class="text-slate-400 mb-2 font-bold">市場定價落差：</p>
+                        <p class="text-emerald-300 mb-2">未充分反映：換電聯盟帶來的 2B 端（企業級）軟體與服務收入潛力。</p>
+                        <p class="text-slate-300">已 Price in：歐洲市場拓展受阻與國內極度內捲的競爭環境。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="disclaimer" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-slate-500 pl-3">九、免責聲明 (Disclaimer)</h2>
+            </div>
+            <div class="metric-card bg-slate-50 border-slate-200" id="disclaimer-container">
+                <div class="text-center py-10">
+                    <p class="text-sm text-slate-500 animate-pulse font-bold">正在載入免責聲明，請稍候...</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- Tab Navigation Logic ---
+        function switchTab(e, tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active', 'border-blue-600', 'text-blue-600');
+                el.classList.add('text-slate-500');
+            });
+            document.getElementById(tabId).classList.add('active');
+            e.currentTarget.classList.remove('text-slate-500');
+            e.currentTarget.classList.add('active', 'border-blue-600', 'text-blue-600');
+        }
+
+        // --- Scenario Toggle Logic ---
+        function showScenario(type) {
+            document.querySelectorAll('.scenario-panel').forEach(el => { el.classList.add('hidden'); el.classList.remove('block'); });
+            ['bull', 'base', 'bear'].forEach(btn => { document.getElementById('btn-' + btn).className = 'flex-1 py-2 text-sm font-bold text-slate-300 rounded hover:bg-slate-700 transition'; });
+            document.getElementById('scenario-' + type).classList.remove('hidden'); document.getElementById('scenario-' + type).classList.add('block');
+            
+            const activeBtn = document.getElementById('btn-' + type);
+            if(type === 'bull') activeBtn.className = 'flex-1 py-2 text-sm font-bold bg-emerald-600 text-white rounded shadow transition';
+            if(type === 'base') activeBtn.className = 'flex-1 py-2 text-sm font-bold bg-blue-600 text-white rounded shadow transition';
+            if(type === 'bear') activeBtn.className = 'flex-1 py-2 text-sm font-bold bg-rose-600 text-white rounded shadow transition';
+        }
+
+        // --- Chart.js Initialization ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctxFin = document.getElementById('financialChart').getContext('2d');
+            new Chart(ctxFin, {
+                type: 'bar',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4(Act)', 'Q1(E)', 'Q2(E)'],
+                    datasets: [
+                        { label: '交付量 (千輛)', data: [30, 57, 61, 72, 65, 80], backgroundColor: 'rgba(37, 99, 235, 0.7)', borderColor: 'rgba(37, 99, 235, 1)', borderWidth: 1, yAxisID: 'y', order: 2 },
+                        { label: '整車毛利率 (%)', data: [9.2, 12.2, 13.1, 15.0, 14.5, 16.0], type: 'line', backgroundColor: 'rgba(16, 185, 129, 1)', borderColor: 'rgba(16, 185, 129, 1)', borderWidth: 3, pointRadius: 4, pointBackgroundColor: 'white', yAxisID: 'y1', order: 1 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+                    plugins: { legend: { position: 'top' } },
+                    scales: {
+                        y: { type: 'linear', display: true, position: 'left', title: { display: true, text: '交付量 (千輛)' }, grid: { color: '#f1f5f9' }, min: 0 },
+                        y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: '毛利率 (%)' }, grid: { drawOnChartArea: false }, min: 0 },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            const ctxVal = document.getElementById('valuationChart').getContext('2d');
+            new Chart(ctxVal, {
+                type: 'bar',
+                data: {
+                    labels: ['NIO (蔚來)', 'XPeng (小鵬)', 'Li Auto (理想)', 'Tesla (特斯拉)'],
+                    datasets: [{
+                        label: 'Forward P/S 倍數', data: [1.1, 1.5, 1.8, 5.5],
+                        backgroundColor: ['rgba(37, 99, 235, 0.9)', 'rgba(148, 163, 184, 0.5)', 'rgba(148, 163, 184, 0.5)', 'rgba(148, 163, 184, 0.5)'],
+                        borderWidth: 0, borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { return context.parsed.x + 'x P/S'; } } } },
+                    scales: { x: { beginAtZero: true, title: { display: true, text: '市銷率倍數 (x)' }, grid: { color: '#f1f5f9' } }, y: { grid: { display: false }, ticks: { font: { weight: 'bold' } } } }
+                }
+            });
+
+            // 讀取免責聲明，並指定顯示【繁體中文】
+            fetch('disclaimer.html')
+                .then(res => res.text())
+                .then(data => {
+                    const c = document.getElementById('disclaimer-container');
+                    if(c) {
+                        c.innerHTML = data;
+                        const tc = document.getElementById('disc-tc');
+                        if(tc) tc.style.display = 'block';
+                    }
+                });
+        });
+    </script>
+</body>
+</html>
