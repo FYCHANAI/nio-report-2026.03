@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIO Inc. (NIO) Research Report | NTAM Senior Analyst</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .chart-container { position: relative; width: 100%; max-width: 800px; margin: 0 auto; height: 350px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 400px; } }
+        .tab-btn.active { border-bottom: 4px solid #2563eb; color: #2563eb; font-weight: 700; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .metric-card { background: white; border-radius: 0.75rem; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); border: 1px solid #e2e8f0; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div id="pi-modal" class="fixed inset-0 z-[9999] bg-slate-900/85 backdrop-blur-sm flex flex-col items-center justify-center px-4" style="display: none;">
+        <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full p-6 md:p-8 relative overflow-y-auto max-h-[90vh]">
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-rose-100 text-rose-600 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                </div>
+                <h2 class="text-2xl font-black text-slate-900 mb-2">Important Notice / 重要聲明 / 重要声明</h2>
+            </div>
+            <div class="space-y-6 text-sm text-slate-600 leading-relaxed text-justify mb-8">
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <p class="font-bold text-slate-800 mb-1">僅供專業投資者使用 (Professional Investors Only)</p>
+                    <p>本網站及報告之內容僅供香港《證券及期貨條例》（香港法例第571章）及其附屬法例所定義之「專業投資者」查閱。點擊「我確認」即表示您聲明並保證您具備專業投資者資格。若您並非專業投資者，請立即點擊「拒絕」並離開此頁面。</p>
+                </div>
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <p class="font-bold text-slate-800 mb-1">仅供专业投资者使用 (Professional Investors Only)</p>
+                    <p>本网站及报告之内容仅供香港《证券及期货条例》（香港法例第571章）及其附属法例所定义之“专业投资者”查阅。点击“我确认”即表示您声明并保证您具备专业投资者资格。若您并非专业投资者，请立即点击“拒绝”并离开此页面。</p>
+                </div>
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <p class="font-bold text-slate-800 mb-1">For Professional Investors Only</p>
+                    <p>The content of this website and report is strictly distributed to and intended for "Professional Investors" only, as defined in the Securities and Futures Ordinance (Cap. 571 of the Laws of Hong Kong) and its subsidiary legislation. By clicking "I Confirm", you declare and warrant that you qualify as a Professional Investor. If you are not a Professional Investor, please click "Decline" and exit this page immediately.</p>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mt-6 pt-6 border-t border-slate-200">
+                <button onclick="declinePI()" class="px-6 py-3 rounded-lg font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors w-full sm:w-auto">拒絕 / Decline</button>
+                <button onclick="acceptPI()" class="px-8 py-3 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-blue-500/30 transition-all w-full sm:w-auto">我確認 I Confirm</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (!sessionStorage.getItem('pi_agreed')) {
+                const modal = document.getElementById('pi-modal');
+                if (modal) { modal.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+            }
+        });
+        function acceptPI() { sessionStorage.setItem('pi_agreed', 'true'); document.getElementById('pi-modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
+        function declinePI() {
+            document.body.innerHTML = `<div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #f8fafc; font-family: sans-serif; text-align: center; padding: 20px;"><h1 style="color: #e11d48; font-size: 24px; font-weight: bold; margin-bottom: 16px;">Access Denied / 拒絕訪問 / 拒绝访问</h1><p style="color: #475569; max-width: 500px; line-height: 1.6;">This content is restricted to Professional Investors only.<br>本內容僅限專業投資者查看。<br>本内容仅限专业投资者查看。</p></div>`;
+        }
+    </script>
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex justify-between items-start">
+                
+                <div class="flex flex-col">
+                    <div class="flex items-center space-x-2 pb-2 mb-2 border-b border-slate-100">
+                        <img src="NTAM%20Logo.png" alt="NTAM Logo" class="h-8 w-auto">
+                        <span class="text-sm font-bold text-slate-700 tracking-wider">NICE TALENT ASSET MANAGEMENT</span>
+                    </div>
+                    
+                    <div class="flex flex-col">
+                        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">NIO Inc. <span class="text-blue-600">NIO</span></h1>
+                        <span class="text-sm text-slate-500 font-medium mt-1">Senior Analyst In-Depth Research Report | Updated Mar 2026</span>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col items-end space-y-3">
+                    <select onchange="window.location.href=this.value" class="bg-slate-100 border border-slate-300 text-slate-700 text-sm rounded-md px-2 py-1 outline-none cursor-pointer font-bold">
+                        <option value="nio.html">繁體中文</option>
+                        <option value="nio-sc.html">简体中文</option>
+                        <option value="nio-en.html" selected>English</option>
+                    </select>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="text-right hidden sm:block">
+                            <div class="text-xs text-slate-400">Est. Price</div>
+                            <div class="text-xl font-bold text-slate-800">$5.80 USD</div>
+                        </div>
+                        <div class="px-4 py-2 bg-emerald-100 text-emerald-800 font-bold rounded-full border border-emerald-200 text-sm whitespace-nowrap">
+                            Rating: Buy
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="flex space-x-8 overflow-x-auto hide-scrollbar border-t border-slate-100 mt-4 pt-1" id="nav-tabs">
+                <button onclick="switchTab(event, 'summary')" class="tab-btn active whitespace-nowrap py-3 px-1 text-sm font-medium text-blue-600">I. Summary</button>
+                <button onclick="switchTab(event, 'financials')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">II. Financials</button>
+                <button onclick="switchTab(event, 'valuation')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">III. Valuation</button>
+                <button onclick="switchTab(event, 'sentiment')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">IV. Sentiment</button>
+                <button onclick="switchTab(event, 'technical')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">V. Technicals</button>
+                <button onclick="switchTab(event, 'risks')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">VI. Risks</button>
+                <button onclick="switchTab(event, 'scenarios')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">VII. Scenarios</button>
+                <button onclick="switchTab(event, 'recommendation')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">VIII. Strategy</button>
+                <button onclick="switchTab(event, 'disclaimer')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">IX. Disclaimer</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <section id="summary" class="tab-content active">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">Executive Summary</h2>
+                <p class="mt-2 text-slate-600">With the full-scale delivery of sub-brands ONVO and Firefly, NIO is successfully pivoting from a premium niche to the mass market. Its expanding Battery-as-a-Service (BaaS) alliance is creating a unique moat and long-tail revenue stream.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="metric-card">
+                        <h3 class="text-lg font-bold text-slate-800 mb-4">I. Investment Conclusion</h3>
+                        <div class="flex flex-wrap items-center mb-4 gap-2">
+                            <span class="px-3 py-1 bg-emerald-100 text-emerald-800 rounded font-semibold text-sm">Rating: Buy</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded font-semibold text-sm">Target Price: $7.00 - $8.50</span>
+                            <span class="px-3 py-1 bg-slate-100 text-slate-800 rounded font-semibold text-sm">Confidence: 7.5 / 10</span>
+                        </div>
+                        <p class="text-sm text-slate-600 mb-4 font-semibold">Play Type: <span class="text-blue-600">Turnaround + Volume Breakout</span></p>
+                        
+                        <h4 class="font-bold text-slate-700 mt-4 mb-2">3 Core Pillars:</h4>
+                        <ol class="list-decimal list-inside space-y-2 text-slate-600 text-sm md:text-base">
+                            <li><strong>Multi-Brand Matrix Scaling:</strong> Production bottlenecks for the ONVO L60 have eased, pushing monthly deliveries past 20,000 units and significantly diluting fixed R&D and SG&A expenses.</li>
+                            <li><strong>BaaS Network Monetization:</strong> Strategic swap-station alliances with giants like Changan and Geely are materializing, transforming heavy CAPEX into stable service cash flows and industry standards.</li>
+                            <li><strong>Vehicle Margin Inflection:</strong> Benefiting from declining battery costs and economies of scale, overall vehicle margins are steadily marching toward a healthy 15% threshold.</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="metric-card text-center">
+                        <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wide mb-2">Target Price Estimate</h3>
+                        <div class="text-4xl font-black text-slate-800 mb-1">$7.50</div>
+                        <div class="text-sm text-emerald-600 font-bold mb-4">Upside Potential: +29%</div>
+                        <div class="text-xs text-slate-400">Based on Wall Street Consensus</div>
+                        <div class="mt-4 w-full bg-slate-200 rounded-full h-2.5">
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: 29%"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-slate-400 mt-1">
+                            <span>Current $5.80</span>
+                            <span>Target $7.50</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="financials" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">II. Financial Review & Outlook</h2>
+                <p class="mt-2 text-slate-600">The latest quarterly report confirms a virtuous cycle of simultaneous growth in deliveries and margins.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="metric-card">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase">Total Deliveries (Q4)</h4>
+                    <p class="text-2xl font-bold text-slate-800 mt-1">72,500 Units</p>
+                    <p class="text-sm text-emerald-600 font-semibold mt-1">YoY: +45%</p>
+                    <p class="text-xs text-slate-400 mt-2">Record High Quarter</p>
+                </div>
+                <div class="metric-card">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase">Vehicle Margin</h4>
+                    <p class="text-2xl font-bold text-slate-800 mt-1">13.1%</p>
+                    <p class="text-sm text-emerald-600 font-semibold mt-1">+1.2% QoQ</p>
+                    <p class="text-xs text-slate-400 mt-2">Driven by lower BOM</p>
+                </div>
+                <div class="metric-card bg-blue-50">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase">Q1 Delivery Guide</h4>
+                    <p class="text-2xl font-bold text-blue-800 mt-1">65k - 68k</p>
+                    <p class="text-sm text-slate-600 font-semibold mt-1">Resilient in low season</p>
+                    <p class="text-xs text-slate-500 mt-2">ONVO production ramping</p>
+                </div>
+                <div class="metric-card bg-slate-100">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase">Free Cash Flow (FCF)</h4>
+                    <p class="text-xl font-bold text-slate-800 mt-1">Improving</p>
+                    <p class="text-sm text-emerald-600 font-semibold mt-1">CYVN Capital Injected</p>
+                    <p class="text-xs text-slate-500 mt-2">Solid liquidity runway</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 metric-card">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold text-slate-800">Historical Deliveries & Margin Trends</h3>
+                        <span class="text-xs bg-slate-100 px-2 py-1 rounded text-slate-500">Unit: Thousands / %</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="financialChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="metric-card">
+                        <h3 class="text-md font-bold text-slate-800 mb-3 border-b pb-2">Trend Analysis</h3>
+                        <div class="text-center py-3 bg-blue-100 rounded mb-3">
+                            <span class="text-lg font-black text-blue-800">Scale Effects Materializing</span>
+                        </div>
+                        <p class="text-sm text-slate-600"><strong>Rationale:</strong> NIO previously suffered from a "high price, low volume" trap. By executing a mass-market penetration strategy with ONVO, the vastly expanded volume base is effectively amortizing its massive BaaS network and R&D depreciation.</p>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <h3 class="text-md font-bold text-slate-800 mb-3 border-b pb-2">Earnings Call Takeaways</h3>
+                        <ul class="text-sm text-slate-600 list-disc list-inside mt-1 space-y-2">
+                            <li><span class="font-bold text-emerald-600">Bullish:</span> Strategic investment from Abu Dhabi's CYVN secures R&D funding for the next two years.</li>
+                            <li><span class="font-bold text-emerald-600">Bullish:</span> NOP+ autonomous driving subscription rates exceeded internal estimates.</li>
+                            <li><span class="font-bold text-rose-600">Risk:</span> Finalized EU tariffs present short-term headwinds for Firefly's global expansion.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="valuation" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">III. Valuation & Consensus</h2>
+                <p class="mt-2 text-slate-600">As emerging EV makers operate near breakeven, the industry standard metric is the Forward Price-to-Sales (P/S) multiple.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <div class="metric-card">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">Analyst Target Price Distribution</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-3 bg-slate-50 rounded">
+                            <span class="text-slate-600 font-medium">Highest (Bull)</span>
+                            <span class="text-lg font-bold text-emerald-600">$10.00</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-blue-50 rounded border border-blue-100">
+                            <span class="text-slate-800 font-bold">Average (Consensus)</span>
+                            <span class="text-xl font-black text-blue-700">$7.50</span>
+                        </div>
+                        <div class="flex justify-between items-center p-3 bg-slate-50 rounded">
+                            <span class="text-slate-600 font-medium">Lowest (Bear)</span>
+                            <span class="text-lg font-bold text-rose-600">$4.20</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-slate-100 text-sm">
+                        <p><strong>Rating Spread:</strong> Buy (55%) / Hold (35%) / Sell (10%)</p>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">Valuation Conclusion</h3>
+                    <p class="text-xl font-bold text-blue-600 mb-2">Conclusion: Substantial Value Zone</p>
+                    <div class="space-y-3 text-sm text-slate-600">
+                        <p>NIO currently trades at a Forward P/S of ~1.1x, significantly lower than Li Auto (1.8x) and XPeng (1.5x). The market previously penalized NIO's valuation due to pessimism surrounding its heavy battery swap CAPEX.</p>
+                        <p>However, with ONVO volumes surging and the BaaS alliance solidifying, NIO's business model is undergoing a re-rating. If margins stay above 15% for two consecutive quarters, multiple expansion toward XPeng's 1.5x level will drive significant upside.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <h3 class="text-lg font-bold text-slate-800 mb-4">EV Peer Comps (Forward P/S)</h3>
+                <div class="chart-container" style="height: 300px; max-height: 350px;">
+                    <canvas id="valuationChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="sentiment" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">IV. Market Sentiment</h2>
+            </div>
+
+            <div class="metric-card mb-6">
+                <h3 class="text-lg font-bold text-slate-800 mb-4">Key News (Last 30 Days)</h3>
+                <ul class="space-y-4">
+                    <li class="border-l-2 border-emerald-500 pl-3">
+                        <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Bullish</span>
+                        <span class="text-sm font-bold text-slate-800 ml-2">ONVO L60 monthly firm orders beat internal estimates</span>
+                        <p class="text-sm text-slate-500 mt-1">Validates NIO's competitiveness in the fierce RMB 200k-250k segment.</p>
+                    </li>
+                    <li class="border-l-2 border-emerald-500 pl-3">
+                        <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Bullish</span>
+                        <span class="text-sm font-bold text-slate-800 ml-2">Mass rollout of 4th Generation Swap Stations</span>
+                        <p class="text-sm text-slate-500 mt-1">Multi-brand compatible; signals the shift of the BaaS alliance into operational reality.</p>
+                    </li>
+                    <li class="border-l-2 border-rose-500 pl-3">
+                        <span class="text-xs font-bold bg-rose-100 text-rose-800 px-2 py-0.5 rounded">Bearish</span>
+                        <span class="text-sm font-bold text-slate-800 ml-2">EU finalizes anti-subsidy tariffs on Chinese EVs</span>
+                        <p class="text-sm text-slate-500 mt-1">Suppresses short-term expectations for NIO's European expansion plans.</p>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="metric-card">
+                <h4 class="text-sm font-bold text-slate-700">Social & Retail Pulse</h4>
+                <p class="text-sm text-slate-600 mt-2">Current Sentiment: <span class="font-bold text-blue-600">Cautiously Bullish</span>. Consumers rate ONVO's product highly, but institutional capital remains sidelined pending actual production ramp-up data. It is a "show-me-the-numbers" market environment.</p>
+            </div>
+        </section>
+
+        <section id="technical" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">V. Technical Analysis</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="metric-card">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">Momentum Indicators</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-slate-50 rounded text-center border border-slate-100">
+                            <div class="text-xs font-bold text-slate-500 mb-1">RSI (14)</div>
+                            <div class="text-2xl font-black text-slate-800">54.2</div>
+                            <div class="text-sm font-semibold text-slate-600">Neutral Consolidation</div>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded text-center border border-slate-100">
+                            <div class="text-xs font-bold text-slate-500 mb-1">MACD</div>
+                            <div class="text-lg font-black text-emerald-600">Tangling Above Zero</div>
+                            <div class="text-sm font-semibold text-slate-600">Awaiting Breakout</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="metric-card">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">Moving Averages & Key Levels</h3>
+                    <div class="space-y-3 text-sm text-slate-600">
+                        <ul class="list-none space-y-2">
+                            <li>• <strong class="text-blue-600">Bottom Confirmed</strong>: The stock formed a solid double bottom near $5.00.</li>
+                            <li>• Currently testing the 120-day MA resistance at $6.10.</li>
+                            <li>• A high-volume break above $6.20 opens a vacuum zone toward $7.50.</li>
+                        </ul>
+                        
+                        <div class="flex justify-between mt-4 p-4 bg-slate-800 text-white rounded-lg">
+                            <div>
+                                <span class="block text-xs text-slate-400">Strong Support (S1)</span>
+                                <span class="font-bold text-emerald-400 text-lg">$5.20</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="block text-xs text-slate-400">Resistance (R1 / R2)</span>
+                                <span class="font-bold text-rose-400 text-lg">$6.20 / $7.50</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="risks" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">VI. Risk Factors</h2>
+            </div>
+
+            <div class="metric-card">
+                <h3 class="text-lg font-bold text-slate-800 mb-4 text-rose-600">Key Risks (By Severity)</h3>
+                <ol class="space-y-4 list-decimal list-inside text-sm text-slate-700">
+                    <li class="pb-3 border-b border-slate-100">
+                        <strong class="text-rose-700 text-base">Intensifying Domestic Price War (Highest):</strong> Aggressive price cuts by BYD or Tesla could force ONVO to squeeze margins to defend market share.
+                    </li>
+                    <li class="pb-3 border-b border-slate-100">
+                        <strong class="text-base">Production Hell Repetition:</strong> NIO has historically struggled with supply chain bottlenecks during new launches; delays with ONVO L60 would severely damage market confidence.
+                    </li>
+                    <li class="pb-3 border-b border-slate-100">
+                        <strong class="text-base">Geopolitics & Tariffs:</strong> US/EU tariff walls against Chinese EVs will hinder the global expansion timeline for NIO and Firefly.
+                    </li>
+                    <li class="pb-3 border-b border-slate-100">
+                        <strong class="text-base">Dilution from Cash Burn:</strong> Failure to rein in BaaS and R&D expenditures could trigger further equity dilution risks.
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="scenarios" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">VII. Scenario Analysis</h2>
+            </div>
+
+            <div class="metric-card bg-slate-900 text-white border-none">
+                <div class="flex space-x-2 mb-6 bg-slate-800 p-1 rounded-lg w-full max-w-md mx-auto">
+                    <button onclick="showScenario('bull')" id="btn-bull" class="flex-1 py-2 text-sm font-bold text-slate-300 rounded hover:bg-slate-700 transition">Bull Case</button>
+                    <button onclick="showScenario('base')" id="btn-base" class="flex-1 py-2 text-sm font-bold bg-blue-600 text-white rounded shadow transition">Base Case</button>
+                    <button onclick="showScenario('bear')" id="btn-bear" class="flex-1 py-2 text-sm font-bold text-slate-300 rounded hover:bg-slate-700 transition">Bear Case</button>
+                </div>
+
+                <div id="scenario-bull" class="scenario-panel hidden max-w-2xl mx-auto text-center">
+                    <h4 class="text-2xl font-black text-emerald-400 mb-4">Bull Case - Target: $10.00</h4>
+                    <ul class="text-sm space-y-4 text-slate-300 text-left bg-slate-800 p-6 rounded-lg">
+                        <li><span class="font-bold text-slate-100 block mb-1">Catalysts:</span> ONVO deliveries sustainably breach 25k/mo; NIO main brand margins top 18%; Release of an FSD-rivaling autonomous product.</li>
+                        <li><span class="font-bold text-slate-100 block mb-1">Financial Impact:</span> Achieves company-wide Non-GAAP profitability ahead of schedule.</li>
+                        <li><span class="font-bold text-slate-100 block mb-1">Market Reaction:</span> Multiple expansion aligns closer to Li Auto, pushing P/S above 1.8x.</li>
+                    </ul>
+                </div>
+
+                <div id="scenario-base" class="scenario-panel block max-w-2xl mx-auto text-center">
+                    <h4 class="text-2xl font-black text-blue-400 mb-4">Base Case - Target: $7.50</h4>
+                    <ul class="text-sm space-y-4 text-slate-300 text-left bg-slate-800 p-6 rounded-lg">
+                        <li><span class="font-bold text-slate-100 block mb-1">Catalysts:</span> Steady ONVO ramp-up offsets flat main-brand sales; BaaS partners connect to the network as planned.</li>
+                        <li><span class="font-bold text-slate-100 block mb-1">Financial Impact:</span> Losses narrow significantly; FCF remains healthy without short-term financing needs.</li>
+                        <li><span class="font-bold text-slate-100 block mb-1">Market Reaction:</span> Extreme bankruptcy pessimism gets priced out; P/S stabilizes at 1.3x-1.5x.</li>
+                    </ul>
+                </div>
+
+                <div id="scenario-bear" class="scenario-panel hidden max-w-2xl mx-auto text-center">
+                    <h4 class="text-2xl font-black text-rose-400 mb-4">Bear Case - Target: $4.00</h4>
+                    <ul class="text-sm space-y-4 text-slate-300 text-left bg-slate-800 p-6 rounded-lg">
+                        <li><span class="font-bold text-slate-100 block mb-1">Catalysts:</span> Brutal domestic EV price war escalates; ONVO loses order backlog to aggressive competitors.</li>
+                        <li><span class="font-bold text-slate-100 block mb-1">Financial Impact:</span> Margins collapse below 10%, exacerbating losses and stoking fears of cash exhaustion.</li>
+                        <li><span class="font-bold text-slate-100 block mb-1">Market Reaction:</span> Capital flight crushes the valuation multiple to sub-0.8x P/S.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="recommendation" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">VIII. Final Strategy & Recommendation</h2>
+            </div>
+
+            <div class="metric-card bg-slate-900 text-white border-none p-6 md:p-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm md:text-base">
+                    <div>
+                        <p class="text-slate-400 mb-2 font-bold">Core Logic:</p>
+                        <p class="mb-6 leading-relaxed">The darkest hour (high R&D, low conversion, capacity bottlenecks) has passed. NIO has entered a harvest phase where massive upfront infra investments (BaaS, ADAS) are translating into mass-market scale via ONVO and Firefly.</p>
+                        
+                        <p class="text-slate-400 mb-2 font-bold">Near-term Catalysts (1-3 Mo):</p>
+                        <p class="mb-6 leading-relaxed">Monthly delivery numbers on the 1st of each month (focus on ONVO mix) and the official market launch of the flagship ET9 sedan.</p>
+                    </div>
+                    <div>
+                        <p class="text-slate-400 mb-2 font-bold">Execution Strategy:</p>
+                        <p class="mb-6 font-bold text-emerald-400 text-xl">Accumulate in tranches between $5.50 - $5.80, with a strict stop-loss set at $4.80.</p>
+
+                        <p class="text-slate-400 mb-2 font-bold">Pricing Disconnect:</p>
+                        <p class="text-emerald-300 mb-2">Not Priced In: The lucrative B2B software and service revenue potential unleashed by the BaaS alliance.</p>
+                        <p class="text-slate-300">Priced In: European expansion friction and the hyper-competitive domestic landscape.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="disclaimer" class="tab-content">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-slate-500 pl-3">IX. Disclaimer</h2>
+            </div>
+            <div class="metric-card bg-slate-50 border-slate-200" id="disclaimer-container">
+                <div class="text-center py-10">
+                    <p class="text-sm text-slate-500 animate-pulse font-bold">Loading Disclaimer, please wait...</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- Tab Navigation Logic ---
+        function switchTab(e, tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active', 'border-blue-600', 'text-blue-600');
+                el.classList.add('text-slate-500');
+            });
+            document.getElementById(tabId).classList.add('active');
+            e.currentTarget.classList.remove('text-slate-500');
+            e.currentTarget.classList.add('active', 'border-blue-600', 'text-blue-600');
+        }
+
+        // --- Scenario Toggle Logic ---
+        function showScenario(type) {
+            document.querySelectorAll('.scenario-panel').forEach(el => { el.classList.add('hidden'); el.classList.remove('block'); });
+            ['bull', 'base', 'bear'].forEach(btn => { document.getElementById('btn-' + btn).className = 'flex-1 py-2 text-sm font-bold text-slate-300 rounded hover:bg-slate-700 transition'; });
+            document.getElementById('scenario-' + type).classList.remove('hidden'); document.getElementById('scenario-' + type).classList.add('block');
+            
+            const activeBtn = document.getElementById('btn-' + type);
+            if(type === 'bull') activeBtn.className = 'flex-1 py-2 text-sm font-bold bg-emerald-600 text-white rounded shadow transition';
+            if(type === 'base') activeBtn.className = 'flex-1 py-2 text-sm font-bold bg-blue-600 text-white rounded shadow transition';
+            if(type === 'bear') activeBtn.className = 'flex-1 py-2 text-sm font-bold bg-rose-600 text-white rounded shadow transition';
+        }
+
+        // --- Chart.js Initialization ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctxFin = document.getElementById('financialChart').getContext('2d');
+            new Chart(ctxFin, {
+                type: 'bar',
+                data: {
+                    labels: ['Q1', 'Q2', 'Q3', 'Q4(Act)', 'Q1(E)', 'Q2(E)'],
+                    datasets: [
+                        { label: 'Deliveries (k Units)', data: [30, 57, 61, 72, 65, 80], backgroundColor: 'rgba(37, 99, 235, 0.7)', borderColor: 'rgba(37, 99, 235, 1)', borderWidth: 1, yAxisID: 'y', order: 2 },
+                        { label: 'Vehicle Margin (%)', data: [9.2, 12.2, 13.1, 15.0, 14.5, 16.0], type: 'line', backgroundColor: 'rgba(16, 185, 129, 1)', borderColor: 'rgba(16, 185, 129, 1)', borderWidth: 3, pointRadius: 4, pointBackgroundColor: 'white', yAxisID: 'y1', order: 1 }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+                    plugins: { legend: { position: 'top' } },
+                    scales: {
+                        y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Deliveries (Thousands)' }, grid: { color: '#f1f5f9' }, min: 0 },
+                        y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Margin (%)' }, grid: { drawOnChartArea: false }, min: 0 },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            const ctxVal = document.getElementById('valuationChart').getContext('2d');
+            new Chart(ctxVal, {
+                type: 'bar',
+                data: {
+                    labels: ['NIO', 'XPeng', 'Li Auto', 'Tesla'],
+                    datasets: [{
+                        label: 'Forward P/S Multiple', data: [1.1, 1.5, 1.8, 5.5],
+                        backgroundColor: ['rgba(37, 99, 235, 0.9)', 'rgba(148, 163, 184, 0.5)', 'rgba(148, 163, 184, 0.5)', 'rgba(148, 163, 184, 0.5)'],
+                        borderWidth: 0, borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: function(context) { return context.parsed.x + 'x P/S'; } } } },
+                    scales: { x: { beginAtZero: true, title: { display: true, text: 'P/S Multiple (x)' }, grid: { color: '#f1f5f9' } }, y: { grid: { display: false }, ticks: { font: { weight: 'bold' } } } }
+                }
+            });
+
+            // Read Disclaimer and force English visibility
+            fetch('disclaimer.html')
+                .then(res => res.text())
+                .then(data => {
+                    const c = document.getElementById('disclaimer-container');
+                    if(c) {
+                        c.innerHTML = data;
+                        const en = document.getElementById('disc-en');
+                        if(en) en.style.display = 'block';
+                    }
+                });
+        });
+    </script>
+</body>
+</html>
