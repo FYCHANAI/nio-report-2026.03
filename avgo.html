@@ -557,17 +557,18 @@
             });
         });
 
+// ==========================================
+        // 2. Gemini API AI Engine Core (最終完美版)
         // ==========================================
-        // 2. Gemini API AI Engine Core
-        // ==========================================
-        // 🚨 請在這裡貼上你最新申請的 API 金鑰！ 🚨
-        const apiKey = "AIzaSyASYaIU90pgK7tZYPtC1rz3YFi6vLp5aGM"; 
+        // 🚨 請貼上你「剛剛全新申請」的 API 金鑰 (因為舊的已經被 GitHub 報廢了)
+        const apiKey = "AIzaSyADeA_rl5hjRQ6IDjNF0Fi4F85A7BS7QYs"; 
 
         async function callGeminiAPI(prompt, systemInstruction) {
-            if (!apiKey || apiKey === "") return "⚠️ <b>系統提示：</b>請先在程式碼底部 (`const apiKey = \"\"`) 填入有效的 Gemini API 金鑰。";
+            if (!apiKey || apiKey === "AIzaSyADeA_rl5hjRQ6IDjNF0Fi4F85A7BS7QYs") return "⚠️ <b>系統提示：</b>請先在程式碼底部填入有效的 Gemini API 金鑰。";
             
-            // 使用絕對相容、不報 404 錯誤的標準模型名稱 gemini-1.5-flash
             const fullPrompt = `${systemInstruction}\n\n用戶的請求是：${prompt}`;
+            
+            // 【關鍵修復】改回最標準的 gemini-1.5-flash，移除 -latest 後綴
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             
             const payload = { contents: [{ parts: [{ text: fullPrompt }] }] };
@@ -575,7 +576,8 @@
             try {
                 const response = await fetch(url, { 
                     method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, // 確保 Headers 正確以避免 HTTP 400
+                    // 【關鍵修復】這個 headers 會防止 HTTP 400 錯誤
+                    headers: { 'Content-Type': 'application/json' }, 
                     body: JSON.stringify(payload) 
                 });
                 
@@ -583,7 +585,7 @@
                 
                 if (!response.ok) {
                     console.error("API Error:", data);
-                    return `連線錯誤 (HTTP ${response.status})：${data.error?.message || '請確認金鑰或網路狀態'}`;
+                    return `連線錯誤 (HTTP ${response.status})：${data.error?.message || '請確認金鑰是否有效'}`;
                 }
                 
                 let rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "抱歉，無法產生有效回覆。";
