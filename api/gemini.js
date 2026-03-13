@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
     const fullPrompt = `${systemInstruction}\n\n用戶的請求是：${prompt}`;
     
-    // 【關鍵修復】這裡已經拔掉了 -latest，使用最標準的 1.5-flash
+    // 🚨 關鍵修復：這裡只用 gemini-1.5-flash，絕對沒有 -latest 🚨
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
     try {
