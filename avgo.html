@@ -558,44 +558,36 @@
         });
 
 // ==========================================
-        // 2. Gemini API AI Engine Core (最終完美版)
+        // 2. 安全版 AI Engine Core (呼叫 Vercel 後端 API)
         // ==========================================
-        // 🚨 請貼上你「剛剛全新申請」的 API 金鑰 (因為舊的已經被 GitHub 報廢了)
-        const apiKey = "AIzaSyB5HeI_Hj82uDjboquo9cWb75JZ2TSYEtE"; 
+        // 💡 這裡不再需要 apiKey 了！已經安全隱藏在後端！
 
         async function callGeminiAPI(prompt, systemInstruction) {
-            if (!apiKey || apiKey === "AIzaSyB5HeI_Hj82uDjboquo9cWb75JZ2TSYEtE") return "⚠️ <b>系統提示：</b>請先在程式碼底部填入有效的 Gemini API 金鑰。";
-            
-            const fullPrompt = `${systemInstruction}\n\n用戶的請求是：${prompt}`;
-            
-            // 【關鍵修復】改回最標準的 gemini-1.5-flash，移除 -latest 後綴
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-            
-            const payload = { contents: [{ parts: [{ text: fullPrompt }] }] };
-
             try {
-                const response = await fetch(url, { 
+                // 呼叫我們準備在 Vercel 建立的後端 API 路徑
+                const response = await fetch('/api/gemini', { 
                     method: 'POST', 
-                    // 【關鍵修復】這個 headers 會防止 HTTP 400 錯誤
                     headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify(payload) 
+                    body: JSON.stringify({ 
+                        prompt: prompt,
+                        systemInstruction: systemInstruction
+                    }) 
                 });
                 
                 const data = await response.json();
                 
                 if (!response.ok) {
-                    console.error("API Error:", data);
-                    return `連線錯誤 (HTTP ${response.status})：${data.error?.message || '請確認金鑰是否有效'}`;
+                    console.error("後端回報錯誤:", data);
+                    return `連線錯誤 (HTTP ${response.status})：${data.error || '未知錯誤'}`;
                 }
                 
                 let rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "抱歉，無法產生有效回覆。";
                 return rawText.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
                 
             } catch (error) {
-                return `網路連線失敗。請檢查您的網路或 API 金鑰設定。(${error.message})`;
+                return `網路連線失敗。請檢查您的網路狀態。(${error.message})`;
             }
         }
-
         // ==========================================
         // 3. AI Chat Widget
         // ==========================================
