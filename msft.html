@@ -87,7 +87,7 @@
                     <div class="flex items-center space-x-4">
                         <div class="text-right hidden sm:block">
                             <div class="text-xs text-slate-400 font-bold">目標價 <span class="text-[10px] ml-1 text-blue-500 bg-blue-50 px-1 rounded">(Source: Bloomberg ANR)</span></div>
-                            <div class="text-xl font-bold text-slate-800">$480.00 USD</div>
+                            <div class="text-xl font-bold text-slate-800">$555.56 USD</div>
                         </div>
                         <div class="px-4 py-2 bg-blue-50 text-blue-700 font-bold rounded-full border border-blue-200 text-sm whitespace-nowrap">評級：增持 (Overweight)</div>
                     </div>
@@ -242,50 +242,50 @@
             <div class="mb-6"><h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">三、估值比較</h2></div>
             <div class="metric-card">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-slate-800">大型科技巨頭 (Magnificent 7) Forward P/E 倍數比較</h3>
+                    <h3 class="text-lg font-bold text-slate-800">大型科技巨頭 (Magnificent) FY 2026 Forward P/E 倍數比較</h3>
                 </div>
                 <div class="chart-container" style="height: 350px;"><canvas id="valuationChart"></canvas></div>
-                <p class="text-xs text-slate-400 mt-3 text-right">Data Source: Bloomberg / NTAM Estimates (Mocked)</p>
+                <p class="text-xs text-slate-400 mt-3 text-right">Data Source: Bloomberg EEO / NTAM Estimates</p>
             </div>
         </section>
 
         <section id="street-comments" class="tab-content">
             <div class="mb-6">
                 <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">四、華爾街觀點</h2>
-                <p class="mt-2 text-sm text-slate-500">摘要自 Bloomberg ANR 最新投行研究報告：</p>
+                <p class="mt-2 text-sm text-slate-500">摘要自 Bloomberg ANR 最新投行研究報告與法說會對答：</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="metric-card border-t-4 border-t-blue-600">
                     <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
                         <h3 class="font-black text-slate-800">摩根士丹利 (Morgan Stanley)</h3>
-                        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-1 rounded">增持 (Overweight)</span>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">增持 (Overweight)</span>
                     </div>
                     <ul class="space-y-3 text-sm text-slate-600 list-disc list-outside ml-4">
-                        <li><b>Copilot 表現超乎預期：</b> M365 Copilot 付費席位突破 2000 萬，採用率遠超市場原先的樂觀預期。</li>
-                        <li><b>變現能力明確：</b> 重點關注強勁的 AI 需求未來將如何轉化為持續的商業訂單，微軟已證明其將基礎設施優勢轉化為軟體訂閱營收的卓越能力。</li>
+                        <li><b>Copilot 表現超乎預期：</b> 點出 M365 Copilot 付費席位突破 2000 萬，採用率遠超市場原先的樂觀預期。</li>
+                        <li><b>商業模式演進與 TAM 擴張：</b> 認為微軟正成功將商業模式轉向「席位加用量 (Seat + Consumption)」，這將大幅擴張其總可潛在市場 (TAM)，並推動客戶未來的 IT 預算重分配。</li>
                     </ul>
                 </div>
 
-                <div class="metric-card border-t-4 border-t-emerald-600">
+                <div class="metric-card border-t-4 border-t-blue-600">
                     <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
-                        <h3 class="font-black text-slate-800">傑富瑞 (Jefferies)</h3>
-                        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-2 py-1 rounded">買入 (Buy)</span>
+                        <h3 class="font-black text-slate-800">高盛 (Goldman Sachs)</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">增持 (Overweight)</span>
                     </div>
                     <ul class="space-y-3 text-sm text-slate-600 list-disc list-outside ml-4">
-                        <li><b>利潤率優於擔憂：</b> 市場普遍擔憂 AI 投資成本過高會侵蝕利潤，但微軟本季仍展現出優於預期的利潤率與強大的成本控管能力。</li>
-                        <li><b>定價模式轉變：</b> 從長遠來看，AI 解決方案有望為微軟帶來更高利潤率，特別是隨著定價模式向「席位+用量 (Seat + Consumption)」的混合模式轉變。</li>
+                        <li><b>Copilot 深度變現與策略升級：</b> 關注 Copilot 從輔助工具向「非同步協作同事 (Async Coworkers)」的演化策略，肯定其用戶使用黏著度已成長至與 Outlook 相當的水準。</li>
+                        <li><b>利潤率優於擔憂：</b> 在高昂的 AI 基礎設施投資下，微軟依然展現出強大的成本控管與營業利潤率維持能力。</li>
                     </ul>
                 </div>
 
-                <div class="metric-card border-t-4 border-t-slate-500">
+                <div class="metric-card border-t-4 border-t-blue-600">
                     <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
-                        <h3 class="font-black text-slate-800">伯恩斯坦 (Bernstein)</h3>
-                        <span class="bg-slate-100 text-slate-600 text-xs font-bold px-2 py-1 rounded">符合大盤 (Market Perform)</span>
+                        <h3 class="font-black text-slate-800">瑞銀 (UBS)</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">增持 (Overweight)</span>
                     </div>
                     <ul class="space-y-3 text-sm text-slate-600 list-disc list-outside ml-4">
-                        <li><b>資本支出擴張的隱憂：</b> 部分投資者對資本支出 (CapEx) 增速快於營收增速的現象感到擔憂。</li>
-                        <li><b>投資回報期考驗：</b> 龐大的基礎設施支出（預計下季達 400 億美元）轉化為實際核心營收的具體時間點與投資回報率 (ROI) 將是接下來幾季的觀察重點。</li>
+                        <li><b>強勁的 AI 算力需求：</b> 認為下半年（FY27 上半年）大幅攀升的 CapEx 指引，強烈反映了 Azure 端龐大且真實的未滿足需求。</li>
+                        <li><b>基礎設施轉化為營收：</b> 看好微軟解決物理供應鏈限制（如 GPU 與伺服器上線速度）的能力，並預期新增的算力能快速、高效地轉化為實質的雲端核心收入。</li>
                     </ul>
                 </div>
             </div>
@@ -445,7 +445,7 @@
                 type: 'bar',
                 data: {
                     labels: ['GOOGL (Alphabet)', 'AAPL (蘋果)', 'AMZN (亞馬遜)', 'MSFT (微軟)'],
-                    datasets: [{ label: 'Forward P/E 倍數', data: [22.5, 28.4, 40.2, 35.0], backgroundColor: ['rgba(148, 163, 184, 0.5)', 'rgba(148, 163, 184, 0.5)', 'rgba(148, 163, 184, 0.5)', 'rgba(37, 99, 235, 0.9)'], borderRadius: 4 }]
+                    datasets: [{ label: 'FY 2026 Forward P/E 倍數', data: [28.60, 31.86, 32.07, 24.42], backgroundColor: ['rgba(148, 163, 184, 0.5)', 'rgba(148, 163, 184, 0.5)', 'rgba(148, 163, 184, 0.5)', 'rgba(37, 99, 235, 0.9)'], borderRadius: 4 }]
                 },
                 options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
