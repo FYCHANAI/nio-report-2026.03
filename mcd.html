@@ -86,10 +86,10 @@
                     </select>
                     <div class="flex items-center space-x-4">
                         <div class="text-right hidden sm:block">
-                            <div class="text-xs text-slate-400 font-bold">目標價 <span class="text-[10px] ml-1 text-slate-400 bg-slate-100 px-1 rounded">Pending</span></div>
-                            <div class="text-xl font-bold text-slate-800">等待更新</div>
+                            <div class="text-xs text-slate-400 font-bold">目標價 <span class="text-[10px] ml-1 text-blue-500 bg-blue-50 px-1 rounded">(Source: Bloomberg ANR)</span></div>
+                            <div class="text-xl font-bold text-slate-800">$331.91 USD <sup class="text-xs text-slate-400 font-normal"></sup></div>
                         </div>
-                        <div class="px-4 py-2 bg-slate-100 text-slate-600 font-bold rounded-full border border-slate-200 text-sm whitespace-nowrap">評級：等待更新</div>
+                        <div class="px-4 py-2 bg-blue-50 text-blue-700 font-bold rounded-full border border-blue-200 text-sm whitespace-nowrap">評級：買入 (Buy)</div>
                     </div>
                 </div>
             </div>
@@ -230,23 +230,47 @@
 
         <section id="valuation" class="tab-content">
             <div class="mb-6"><h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">三、估值比較</h2></div>
-            <div class="metric-card flex flex-col items-center justify-center p-12 bg-slate-50 border-dashed border-2 border-slate-300">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-slate-400 mb-3">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 9.67l3.928-3.929m0 0a2 2 0 1 0 2.829-2.828l-3.928 3.929m0 0-3.928-3.929a2 2 0 1 0-2.829 2.828l3.928 3.929" />
-                </svg>
-                <h3 class="text-lg font-bold text-slate-700 mb-1">等待彭博終端機數據匯入</h3>
-                <p class="text-sm text-slate-500">目前尚未匯入最新的 Bloomberg EEO 估值與同業比較數據，請靜待系統更新。</p>
+            <div class="metric-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-slate-800">FY 2026 Forward P/E 倍數比較</h3>
+                </div>
+                <div class="chart-container" style="height: 350px;"><canvas id="valuationChart"></canvas></div>
+                <p class="text-xs text-slate-400 mt-3 text-right">Data Source: Bloomberg EEO / NTAM Estimates <span class="font-normal"></span></p>
             </div>
         </section>
 
         <section id="street-comments" class="tab-content">
             <div class="mb-6"><h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">四、華爾街觀點</h2></div>
-            <div class="metric-card flex flex-col items-center justify-center p-12 bg-slate-50 border-dashed border-2 border-slate-300">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 text-slate-400 mb-3">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                </svg>
-                <h3 class="text-lg font-bold text-slate-700 mb-1">等待彭博終端機數據匯入</h3>
-                <p class="text-sm text-slate-500">目前尚未匯入最新的 Bloomberg ANR 投行分析師預期數據，請靜待系統更新。</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="metric-card border-t-4 border-t-blue-600">
+                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
+                        <h3 class="font-black text-slate-800">JP Morgan</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">增持 (Overweight)</span>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-600 list-disc list-outside ml-4">
+                        <li><b>分析師觀點：</b> 分析師給予增持評級，目標價設定為 305.00 美元。</li>
+                    </ul>
+                </div>
+
+                <div class="metric-card border-t-4 border-t-blue-600">
+                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
+                        <h3 class="font-black text-slate-800">UBS</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">買入 (Buy)</span>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-600 list-disc list-outside ml-4">
+                        <li><b>分析師觀點：</b> 分析師給予買入評級，目標價為 365.00 美元。</li>
+                    </ul>
+                </div>
+
+                <div class="metric-card border-t-4 border-t-blue-600">
+                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
+                        <h3 class="font-black text-slate-800">Goldman Sachs</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">買入 (Buy)</span>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-600 list-disc list-outside ml-4">
+                        <li><b>分析師觀點：</b> 分析師給予買入評級，目標價高達 370.00 美元。</li>
+                    </ul>
+                </div>
             </div>
         </section>
 
@@ -255,7 +279,7 @@
             <div class="metric-card">
                 <ol class="space-y-4 list-decimal list-inside text-sm text-slate-700">
                     <li class="pb-3 border-b border-slate-100">
-                        <strong class="text-rose-700 text-base">總體經濟環境挑戰：</strong> 執行長 Chris Kempczinski 坦言，公司目前仍處於「充滿挑戰的環境」中營運。
+                        <strong class="text-rose-700 text-base">總體經濟環境挑戰：</strong> 執行長 Chris Kempczinski 於聲明中坦言，公司目前仍處於「充滿挑戰的環境」中營運。
                     </li>
                     <li class="pb-3 border-b border-slate-100">
                         <strong class="text-base">匯率波動與惡性通膨：</strong> 財務表現易受外匯折算影響，且部分市場面臨三年累計通膨率超過 100% 的惡性通膨壓力。
@@ -397,6 +421,16 @@
                     }]
                 },
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
+            });
+
+            // Chart 3: Valuation (Peers)
+            new Chart(document.getElementById('valuationChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['MCD (麥當勞)'],
+                    datasets: [{ label: 'FY 2026 Forward P/E 倍數', data: [21.09], backgroundColor: ['rgba(37, 99, 235, 0.9)'], borderRadius: 4 }]
+                },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
 
             // 讀取外部 disclaimer.html 檔案
