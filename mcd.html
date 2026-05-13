@@ -232,7 +232,7 @@
             <div class="mb-6"><h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">三、估值比較</h2></div>
             <div class="metric-card">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold text-slate-800">FY 2026 Forward P/E 倍數比較</h3>
+                    <h3 class="text-lg font-bold text-slate-800">全球餐飲巨頭 FY 2026 Forward P/E 倍數比較</h3>
                 </div>
                 <div class="chart-container" style="height: 350px;"><canvas id="valuationChart"></canvas></div>
                 <p class="text-xs text-slate-400 mt-3 text-right">Data Source: Bloomberg EEO / NTAM Estimates <span class="font-normal"></span></p>
@@ -248,7 +248,7 @@
                         <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">增持 (Overweight)</span>
                     </div>
                     <ul class="space-y-3 text-sm text-slate-600 list-disc list-outside ml-4">
-                        <li><b>分析師觀點：</b> 分析師給予增持評級，目標價設定為 305.00 美元。</li>
+                        <li><b>防禦性與數位化優勢：</b> 分析師給予增持評級，目標價設定為 305.00 美元。雖然總體經濟環境面臨挑戰，但麥當勞憑藉強大的品牌力與高達 380 億美元的忠誠計畫年營收貢獻，展現出極強的防禦性與市佔率擴張潛力。</li>
                     </ul>
                 </div>
 
@@ -258,7 +258,7 @@
                         <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">買入 (Buy)</span>
                     </div>
                     <ul class="space-y-3 text-sm text-slate-600 list-disc list-outside ml-4">
-                        <li><b>分析師觀點：</b> 分析師給予買入評級，目標價為 365.00 美元。</li>
+                        <li><b>組織重組效益顯現：</b> 分析師給予買入評級，目標價為 365.00 美元。指出全球同店銷售 3.8% 的增長優於預期，且「加速組織發展」計畫帶來的短期重組費用將轉化為長期的營運槓桿與利潤率擴張。</li>
                     </ul>
                 </div>
 
@@ -268,7 +268,7 @@
                         <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">買入 (Buy)</span>
                     </div>
                     <ul class="space-y-3 text-sm text-slate-600 list-disc list-outside ml-4">
-                        <li><b>分析師觀點：</b> 分析師給予買入評級，目標價高達 370.00 美元。</li>
+                        <li><b>定價能力與加盟模式護城河：</b> 分析師給予買入評級，目標價高達 370.00 美元。強調在惡性通膨與成本壓力下，麥當勞的加盟模式提供了穩定的現金流（加盟營收年增9%），展現出卓越的定價能力與抗風險能力。</li>
                     </ul>
                 </div>
             </div>
@@ -427,8 +427,8 @@
             new Chart(document.getElementById('valuationChart').getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: ['MCD (麥當勞)'],
-                    datasets: [{ label: 'FY 2026 Forward P/E 倍數', data: [21.09], backgroundColor: ['rgba(37, 99, 235, 0.9)'], borderRadius: 4 }]
+                    labels: ['MCD (麥當勞)', 'SBUX (星巴克)', 'YUM (百勝餐飲)', 'QSR (餐飲品牌國際)'],
+                    datasets: [{ label: 'FY 2026 Forward P/E 倍數', data: [21.09, 19.50, 23.10, 20.20], backgroundColor: ['rgba(37, 99, 235, 0.9)', 'rgba(148, 163, 184, 0.5)', 'rgba(148, 163, 184, 0.5)', 'rgba(148, 163, 184, 0.5)'], borderRadius: 4 }]
                 },
                 options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
