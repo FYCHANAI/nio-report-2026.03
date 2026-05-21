@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NVIDIA (NVDA) 深度研究报告 | NTAM 资深分析师</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Sans SC', sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
+        .chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 400px; } }
+        .tab-btn.active { border-bottom: 4px solid #2563eb; color: #2563eb; font-weight: 700; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .metric-card { background: white; border-radius: 0.75rem; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); border: 1px solid #e2e8f0; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* AI Animations */
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .animate-slide-up { animation: slideUp 0.3s ease-out forwards; }
+        .typing-dot { animation: typing 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
+        #selection-tooltip { transition: opacity 0.2s, transform 0.2s; z-index: 1000; }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+    <div id="pi-modal" class="fixed inset-0 z-[9999] bg-slate-900/85 backdrop-blur-sm flex flex-col items-center justify-center px-4" style="display: none;">
+        <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full p-6 md:p-8 relative overflow-y-auto max-h-[90vh]">
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-rose-100 text-rose-600 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77-1.333.192 3 1.732 3z" /></svg>
+                </div>
+                <h2 class="text-2xl font-black text-slate-900 mb-2">Important Notice / 重要声明</h2>
+            </div>
+            <div class="space-y-6 text-sm text-slate-600 leading-relaxed text-justify mb-8">
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <p class="font-bold text-slate-800 mb-1">僅供專業投資者使用 (Professional Investors Only)</p>
+                    <p>本網站及報告之內容僅供香港法例第571章《證券及期貨條例》及其附屬法例所定義之「專業投資者」查閱。點擊「我確認」即表示您聲明並保證您具備專業投資者資格。</p>
+                </div>
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <p class="font-bold text-slate-800 mb-1">仅供专业投资者使用 (Professional Investors Only)</p>
+                    <p>本网站及报告之内容仅供香港法例第571章《证券及期货条例》及其附属法例所定义之“专业投资者”查阅。点击“我确认”即表示您声明并保证您具备专业投资者资格。</p>
+                </div>
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <p class="font-bold text-slate-800 mb-1">For Professional Investors Only</p>
+                    <p>The content of this website and report is strictly distributed to and intended for "Professional Investors" only, as defined in the Securities and Futures Ordinance (Cap. 571 of the Laws of Hong Kong) and its subsidiary legislation.</p>
+                </div>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center mt-6 pt-6 border-t border-slate-200">
+                <button onclick="declinePI()" class="px-6 py-3 rounded-lg font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors w-full sm:w-auto">拒绝 / Decline</button>
+                <button onclick="acceptPI()" class="px-8 py-3 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-lg transition-all w-full sm:w-auto">我确认 I Confirm</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() { if (!sessionStorage.getItem('pi_agreed')) { const modal = document.getElementById('pi-modal'); if (modal) { modal.style.display = 'flex'; document.body.style.overflow = 'hidden'; } } });
+        function acceptPI() { sessionStorage.setItem('pi_agreed', 'true'); document.getElementById('pi-modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
+        function declinePI() { document.body.innerHTML = `<div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #f8fafc; font-family: sans-serif; text-align: center; padding: 20px;"><h1 style="color: #e11d48; font-size: 24px; font-weight: bold; margin-bottom: 16px;">Access Denied</h1><p>This content is restricted to Professional Investors only.</p></div>`; }
+    </script>
+
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex justify-between items-start">
+                <div class="flex flex-col">
+                    <a href="index.html" class="flex items-center space-x-2 pb-2 mb-2 border-b border-slate-100 hover:opacity-75 transition-opacity cursor-pointer">
+                        <img src="NTAM%20Logo.png" alt="NTAM Logo" class="h-8 w-auto" onerror="this.style.display='none'">
+                        <span class="text-sm font-bold text-slate-700 tracking-wider">NICE TALENT ASSET MANAGEMENT</span>
+                    </a>
+                    <div class="flex Flex-col">
+                        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">NVIDIA <span class="text-blue-600">NVDA</span></h1>
+                        <span class="text-sm text-slate-500 font-medium mt-1">资深分析师 运营与战略报告 | Q1 2027</span>
+                    </div>
+                </div>
+                <div class="flex flex-col items-end space-y-3">
+                    <select onchange="window.location.href=this.value" class="bg-slate-100 border border-slate-300 text-slate-700 text-sm rounded-md px-2 py-1 outline-none cursor-pointer font-bold">
+                        <option value="nvda.html">繁體中文</option>
+                        <option value="nvda-sc.html" selected>简体中文</option>
+                        <option value="nvda-en.html">English</option>
+                    </select>
+                    <div class="flex items-center space-x-4">
+                        <div class="text-right hidden sm:block">
+                            <div class="text-xs text-slate-400 font-bold">目标价 <span class="text-[10px] ml-1 text-blue-500 bg-blue-50 px-1 rounded">(Source: Bloomberg ANR)</span></div>
+                            <div class="text-xl font-bold text-slate-800">$279.12 USD</div>
+                        </div>
+                        <div class="px-4 py-2 bg-blue-50 text-blue-700 font-bold rounded-full border border-blue-200 text-sm whitespace-nowrap">评级：买入 (Buy)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="flex space-x-8 overflow-x-auto hide-scrollbar border-t border-slate-100 mt-4 pt-1" id="nav-tabs">
+                <button onclick="switchTab(event, 'our-comments')" class="tab-btn active whitespace-nowrap py-3 px-1 text-sm font-medium text-blue-600">一. 我们的观点</button>
+                <button onclick="switchTab(event, 'financials')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">二. 运营与财务数据</button>
+                <button onclick="switchTab(event, 'valuation')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">三. 估值比较</button>
+                <button onclick="switchTab(event, 'street-comments')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">四. 华尔街观点</button>
+                <button onclick="switchTab(event, 'risks')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">五. 风险因素</button>
+                <button onclick="switchTab(event, 'sandbox')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-indigo-500 hover:text-indigo-700">六. AI 互动沙盒 ✨</button>
+                <button onclick="switchTab(event, 'disclaimer')" class="tab-btn whitespace-nowrap py-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-700">七. 免责声明</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+
+        <section id="our-comments" class="tab-content active">
+            <div class="mb-6">
+                <h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">一、我们的观点</h2>
+                <p class="mt-2 text-sm text-slate-500">基于 FY27 Q1 财报与法说会简报，以下为 NTAM 研究团队提炼之 NVDA 核心结论：</p>
+            </div>
+            <div class="metric-card bg-slate-900 text-white border-none p-6 md:p-8">
+                <div class="flex items-center mb-6 border-b border-slate-700 pb-4">
+                    <span class="text-3xl mr-3">🎯</span>
+                    <h3 class="text-2xl font-black text-blue-400 tracking-tight">核心结论</h3>
+                </div>
+                <ul class="space-y-6">
+                    <li class="flex items-start">
+                        <span class="text-emerald-400 mr-4 text-xl font-black">1.</span>
+                        <div>
+                            <strong class="text-emerald-400 block mb-1 text-lg">财报结构转型与营收创高</strong>
+                            <p class="text-slate-300 text-sm leading-relaxed">公司将业务重组为“数据中心 (Data Center)”与“边缘计算 (Edge Computing)”两大板块。第一季总营收达创纪录的 816.15 亿美元，年增 85%，季增 20%。</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-emerald-400 mr-4 text-xl font-black">2.</span>
+                        <div>
+                            <strong class="text-emerald-400 block mb-1 text-lg">数据中心业务强势扩张</strong>
+                            <p class="text-slate-300 text-sm leading-relaxed">数据中心营收达 752 亿美元（年增 92%），其中 Hyperscale 客户贡献约 50%。Blackwell 架构已被所有主要云服务商采用，下一代 Vera Rubin 平台预计于下半年出货。</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-emerald-400 mr-4 text-xl font-black">3.</span>
+                        <div>
+                            <strong class="text-emerald-400 block mb-1 text-lg">获利能力跃升与利润率修复</strong>
+                            <p class="text-slate-300 text-sm leading-relaxed">Non-GAAP 净利达 455.48 亿美元，EPS 为 1.87 美元（年增 140%）。Non-GAAP 毛利率提升至 75.0%，主要受惠于数据中心高毛利贡献与去年同期 H20 库存跌价损失的低基期效应。</p>
+                        </div>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-emerald-400 mr-4 text-xl font-black">4.</span>
+                        <div>
+                            <strong class="text-emerald-400 block mb-1 text-lg">巨额资本回馈计划</strong>
+                            <p class="text-slate-300 text-sm leading-relaxed">本季向股东回馈创纪录的 200 亿美元。董事会不仅将每季现金股利调升至 0.25 美元，更额外授权高达 800 亿美元且无到期日的股票回购计划。</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="financials" class="tab-content">
+            <div class="mb-6"><h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">二、运营与财务数据</h2></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="metric-card border-t-4 border-t-emerald-500">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase">总营收 (Total Revenue)</h4>
+                    <p class="text-2xl font-bold text-slate-800 mt-1">$81.62 B</p>
+                    <p class="text-sm text-emerald-600 font-semibold mt-1">▲ YoY +85%</p>
+                </div>
+                <div class="metric-card border-t-4 border-t-blue-500">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase">数据中心营收 (Data Center)</h4>
+                    <p class="text-2xl font-bold text-slate-800 mt-1">$75.25 B</p>
+                    <p class="text-sm text-blue-600 font-semibold mt-1">▲ YoY +92%</p>
+                </div>
+                <div class="metric-card border-t-4 border-t-indigo-500">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase">Non-GAAP 营业利润</h4>
+                    <p class="text-2xl font-bold text-slate-800 mt-1">$53.78 B</p>
+                    <p class="text-sm text-emerald-600 font-semibold mt-1">▲ YoY +147%</p>
+                </div>
+                <div class="metric-card border-t-4 border-t-purple-500">
+                    <h4 class="text-xs font-bold text-slate-500 uppercase">Non-GAAP 净利润</h4>
+                    <p class="text-xl font-bold text-slate-800 mt-1">$45.55 B</p>
+                    <p class="text-sm text-emerald-600 font-semibold mt-1">▲ EPS $1.87 (+140%)</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="metric-card">
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Q1 营收板块结构 (Billion USD)</h3>
+                    <p class="text-xs text-slate-500 mb-4">数据中心业务（涵盖 Hyperscale 与 ACIE）占绝对主导地位，边缘计算稳健成长。</p>
+                    <div class="chart-container"><canvas id="segmentRevenueChart"></canvas></div>
+                </div>
+
+                <div class="metric-card">
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">获利能力指标 (Billion USD)</h3>
+                    <p class="text-xs text-slate-500 mb-4">营运杠杆效应显著，Non-GAAP 营业利润率攀升至约 65.9%。</p>
+                    <div class="chart-container"><canvas id="profitabilityChart"></canvas></div>
+                </div>
+            </div>
+
+            <div class="metric-card mt-6">
+                <h3 class="text-lg font-bold text-slate-800 mb-4">各事业群运营明细 (FY27 Q1)</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm text-left border-collapse">
+                        <thead class="text-xs uppercase bg-slate-100 text-slate-600 border-b border-slate-200">
+                            <tr>
+                                <th class="px-6 py-3 font-bold">市场平台 (Market Platform)</th>
+                                <th class="px-6 py-3 font-bold text-right">营收 (Million)</th>
+                                <th class="px-6 py-3 font-bold text-right text-emerald-600">营收增长 (YoY)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-700">
+                            <tr class="border-b border-slate-100">
+                                <td class="px-6 py-4 font-medium pl-6">数据中心 (Data Center)</td>
+                                <td class="px-6 py-4 text-right">$74,550</td>
+                                <td class="px-6 py-4 text-right text-emerald-500 font-bold">+92%</td>
+                            </tr>
+                            <tr class="border-b border-slate-100 bg-slate-50/50">
+                                <td class="px-6 py-2 text-slate-500 pl-10">- Hyperscale</td>
+                                <td class="px-6 py-2 text-right text-slate-500">$37,869</td>
+                                <td class="px-6 py-2 text-right text-emerald-500/80 font-bold">+115%</td>
+                            </tr>
+                            <tr class="border-b border-slate-100 bg-slate-50/50">
+                                <td class="px-6 py-2 text-slate-500 pl-10">- ACIE (AI Cloud, Industrial & Enterprise)</td>
+                                <td class="px-6 py-2 text-right text-slate-500">$37,377</td>
+                                <td class="px-6 py-2 text-right text-emerald-500/80 font-bold">+74%</td>
+                            </tr>
+                            <tr class="border-b border-slate-100">
+                                <td class="px-6 py-4 font-medium pl-6">边缘计算 (Edge Computing)</td>
+                                <td class="px-6 py-4 text-right">$6,369</td>
+                                <td class="px-6 py-4 text-right text-emerald-500 font-bold">+29%</td>
+                            </tr>
+                            <tr class="bg-slate-50 font-bold border-t-2 border-slate-300">
+                                <td class="px-6 py-4 text-slate-800">总计 (Total Revenue)</td>
+                                <td class="px-6 py-4 text-right text-slate-800">$81,615</td>
+                                <td class="px-6 py-4 text-right text-emerald-600">+85%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="valuation" class="tab-content">
+            <div class="mb-6"><h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">三、估值比较</h2></div>
+            <div class="metric-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-slate-800">半导体同业 Forward P/E 倍数比较</h3>
+                </div>
+                <div class="chart-container" style="height: 350px;"><canvas id="valuationChart"></canvas></div>
+                <p class="text-xs text-slate-400 mt-3 text-right">Data Source: Bloomberg EEO / NTAM Estimates</p>
+                <p class="text-xs text-slate-400 mt-1 text-right">Note: NVDA 基于 FY 2027 预估，其余同业基于 FY 2026 预估。</p>
+            </div>
+        </section>
+
+        <section id="street-comments" class="tab-content">
+            <div class="mb-6"><h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">四、华尔街观点</h2></div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="metric-card border-t-4 border-t-blue-600">
+                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
+                        <h3 class="font-black text-slate-800">Morgan Stanley</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">增持 (Overweight)</span>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-600 list-disc list-outside ml-4">
+                        <li><b>无可撼动的 AI 霸主地位：</b> 给予增持 (Overweight/Attractive) 评级，目标价为 285.00 美元。看好 NVIDIA 在全球 AI 工厂建置浪潮中的核心地位，尤其是 Blackwell 架构的强大竞争力。</li>
+                    </ul>
+                </div>
+
+                <div class="metric-card border-t-4 border-t-blue-600">
+                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
+                        <h3 class="font-black text-slate-800">Goldman Sachs</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">买入 (Buy)</span>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-600 list-disc list-outside ml-4">
+                        <li><b>目标价 285 美元：</b> 给予买入 (Buy) 评级，目标价设定为 285.00 美元。肯定公司强大的自由现金流生成能力（单季达 485 亿美元）以及高达 800 亿美元的大规模股票回购计划。</li>
+                    </ul>
+                </div>
+
+                <div class="metric-card border-t-4 border-t-blue-600">
+                    <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
+                        <h3 class="font-black text-slate-800">UBS</h3>
+                        <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">买入 (Buy)</span>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-600 list-disc list-outside ml-4">
+                        <li><b>下一代架构能见度高：</b> 给予买入 (Buy) 评级。强调 Vera Rubin 平台与代理式 AI 的发展，将确保 NVIDIA 于 FY2027 及以后在数据中心与边缘计算领域的营收动能持续强劲。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="risks" class="tab-content">
+            <div class="mb-6"><h2 class="text-xl font-bold text-slate-800 border-l-4 border-blue-500 pl-3">五、风险因素</h2></div>
+            <div class="metric-card">
+                <ol class="space-y-4 list-decimal list-inside text-sm text-slate-700">
+                    <li class="pb-3 border-b border-slate-100">
+                        <strong class="text-rose-700 text-base">地缘政治与美国出口管制：</strong> 美国政府的出口管制影响扩大。本季无任何 Hopper 芯片出货至中国；且根据最新规定，H200 出货中国必须在美国接受检查，并加征 25% 关税。此外，立法机构正研拟 AI Diffusion IFR 替代法案与 GAIN AI Act，若通过将进一步打击海外销售弹性。
+                    </li>
+                    <li class="pb-3 border-b border-slate-100">
+                        <strong class="text-base">基础设施与建置资源限制：</strong> 客户扩张 AI 算力的进度受制于数据中心空间、电力能源供应与资金筹措能力。基础设施资源的短缺可能延迟 AI 部署进度并限制市场对 NVIDIA 产品的吸纳速度。
+                    </li>
+                    <li class="pb-3 border-b border-slate-100">
+                        <strong class="text-base">新旧产品交替与供应链挑战：</strong> 加快至每年迭代的节奏（如下半年即将出货的 Vera Rubin）增加了供应链复杂度。过快的架构转换可能导致客户延迟购买现有产品，同时新架构初期可能面临良率挑战或产生大量库存错配损失（如过去的 H20 库跌价）。
+                    </li>
+                    <li class="pb-1">
+                        <strong class="text-base">开源模型与同业竞争夹击：</strong> 随着如 DeepSeek、Qwen 等高质量开源基础模型快速崛起，降低了 AI 应用的开发门槛。若开发者倾向在竞争对手或云服务商的自研 ASIC 上部署这些开源模型，将可能削弱对 NVIDIA GPU 生态系的依赖度。
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="sandbox" class="tab-content">
+            <div class="mb-6"><h2 class="text-xl font-bold text-slate-800 border-l-4 border-indigo-500 pl-3">六、AI 定制化情境推演 (Sandbox)</h2></div>
+            
+            <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-6 md:p-8 shadow-sm">
+                <div class="flex items-center mb-3">
+                    <span class="text-2xl mr-3">✨</span>
+                    <h3 class="text-xl font-black text-indigo-900 tracking-tight">AI 即时沙盘推演</h3>
+                </div>
+                <p class="text-sm text-indigo-700 mb-6 leading-relaxed">请在下方输入您假设的产业变量（例如：美国对华禁令进一步收紧、开源模型效能突破导致推理端硬件转向自研 ASIC），AI 将基于 NVDA 当前的营收结构与市场表现，为您即时推演潜在影响。</p>
+                <div class="flex flex-col md:flex-row gap-3">
+                    <input type="text" id="custom-scenario-input" placeholder="试试输入：如果美国政府进一步扩大 AI Diffusion 禁令，导致 NVIDIA 完全失去中东市场的算力订单..." class="flex-1 border border-indigo-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-inner">
+                    <button onclick="generateCustomScenario()" id="btn-generate-scenario" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg text-sm font-bold shadow-md transition-all whitespace-nowrap">
+                        开始推演
+                    </button>
+                </div>
+                <div id="scenario-loading" class="hidden mt-6 text-sm text-indigo-600 font-bold flex items-center bg-indigo-100/50 p-4 rounded-lg">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    AI 正在通过 Vercel 后端计算数据...
+                </div>
+                <div id="scenario-result" class="mt-6 hidden bg-white p-6 rounded-xl border border-indigo-200 text-sm text-slate-800 leading-relaxed shadow-sm"></div>
+            </div>
+        </section>
+
+        <section id="disclaimer" class="tab-content">
+            <div class="mb-6"><h2 class="text-xl font-bold text-slate-800 border-l-4 border-slate-500 pl-3">七、免责声明</h2></div>
+            <div class="metric-card bg-slate-50 border-slate-200" id="disclaimer-container">
+                <div class="text-center py-10"><p class="text-sm text-slate-500 font-bold animate-pulse">正在从 disclaimer.html 载入免责声明，请稍候...</p></div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="ai-chat-widget" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <div id="chat-window" class="hidden animate-slide-up mb-4 w-[340px] sm:w-[400px] h-[500px] bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden">
+            <div class="bg-blue-600 text-white p-4 flex justify-between items-center shadow-md z-10">
+                <div class="flex items-center">
+                    <span class="text-2xl mr-2">🤖</span>
+                    <div><h4 class="font-bold text-sm">研究员专属 AI 助理</h4><p class="text-xs text-blue-200">Powered by Vercel & Gemini ✨</p></div>
+                </div>
+                <button onclick="toggleChat()" class="text-blue-200 hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-slate-50 space-y-4">
+                <div class="bg-white border border-slate-200 text-slate-700 rounded-tl-none rounded-2xl mr-auto max-w-[85%] p-3 text-sm shadow-sm leading-relaxed">
+                    分析师您好！我是您的专属 NVIDIA (NVDA) 报告辅助 AI。您可以随时询问我关于本次资料中心营收大增 92%、Vera Rubin 平台布局，或是 H200 出口管制关税的潜在影响。
+                </div>
+            </div>
+            <div class="p-3 bg-white border-t border-slate-200">
+                <form id="chat-form" onsubmit="handleChatSubmit(event)" class="flex gap-2">
+                    <input type="text" id="chat-input" placeholder="输入您的指令..." class="flex-1 border border-slate-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white rounded-full w-10 h-10 flex items-center justify-center transition-colors shrink-0 shadow-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform rotate-90" viewBox="0 0 20 20" fill="currentColor"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" /></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <button onclick="toggleChat()" id="chat-toggle-btn" class="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-2xl hover:scale-110 transition-transform group relative flex items-center justify-center">
+            <span class="text-2xl">✨</span>
+        </button>
+    </div>
+
+    <div id="selection-tooltip" class="fixed hidden opacity-0 transform scale-95 pointer-events-none transition-all">
+        <button onclick="explainSelectedTerm()" class="pointer-events-auto bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-3 py-2 rounded-lg shadow-xl flex items-center gap-1 transition-colors border border-slate-600">
+            <span>✨</span> AI 白话文解释
+        </button>
+    </div>
+    <div id="explain-modal" class="fixed inset-0 bg-slate-900/60 hidden z-[9999] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
+            <div class="bg-blue-600 text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold flex items-center"><span class="mr-2 text-xl">✨</span> 术语解释</h3>
+                <button onclick="closeExplainModal()" class="text-blue-200 hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="mb-4 text-xs font-bold text-slate-400 uppercase tracking-wider">您查询的词汇：</div>
+                <div id="explain-term-title" class="text-xl font-black text-slate-800 mb-4 pb-3 border-b border-slate-100"></div>
+                <div id="explain-loading" class="hidden text-sm text-blue-600 font-bold flex items-center justify-center py-6 bg-blue-50 rounded-lg">
+                    <svg class="animate-spin -ml-1 mr-3 h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                    AI 正在生成解释...
+                </div>
+                <div id="explain-result" class="text-sm text-slate-700 leading-relaxed hidden bg-slate-50 p-4 rounded-lg border border-slate-100"></div>
+            </div>
+            <div class="bg-slate-50 p-4 border-t border-slate-200 flex justify-end">
+                <button onclick="closeExplainModal()" class="bg-slate-300 hover:bg-slate-400 text-slate-800 px-5 py-2 rounded-lg text-sm font-bold transition-colors">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(e, tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => { el.classList.remove('active', 'border-blue-600', 'text-blue-600'); el.classList.add('text-slate-500'); });
+            document.getElementById(tabId).classList.add('active');
+            e.currentTarget.classList.remove('text-slate-500'); e.currentTarget.classList.add('active', 'border-blue-600', 'text-blue-600');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // Chart 1: Segment Revenue
+            new Chart(document.getElementById('segmentRevenueChart').getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['数据中心 (Data Center)', '边缘计算 (Edge Computing)'],
+                    datasets: [{
+                        data: [75.246, 6.369],
+                        backgroundColor: ['rgba(16, 185, 129, 0.8)', 'rgba(59, 130, 246, 0.8)'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, cutout: '60%' }
+            });
+
+            // Chart 2: Profitability
+            new Chart(document.getElementById('profitabilityChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['总营收 (Total Rev)', 'GAAP 营业利润', 'Non-GAAP 净利润'],
+                    datasets: [{
+                        label: '十亿美元 (Billion USD)',
+                        data: [81.62, 53.54, 45.55],
+                        backgroundColor: ['#94a3b8', '#3b82f6', '#10b981'],
+                        borderRadius: 4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
+            });
+
+            // Chart 3: Valuation (Peers)
+            new Chart(document.getElementById('valuationChart').getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['INTC (英特尔)', 'AMD (超微半导体)', 'AVGO (博通)', 'NVDA (NVIDIA)*'],
+                    datasets: [{ label: 'Forward P/E 倍数', data: [107.46, 61.87, 37.59, 26.47], backgroundColor: ['rgba(148, 163, 184, 0.5)', 'rgba(148, 163, 184, 0.5)', 'rgba(148, 163, 184, 0.5)', 'rgba(37, 99, 235, 0.9)'], borderRadius: 4 }]
+                },
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+
+            // 读取外部 disclaimer.html 文件
+            fetch('disclaimer.html')
+                .then(response => {
+                    if (!response.ok) throw new Error('无法读取 disclaimer.html');
+                    return response.text();
+                })
+                .then(html => {
+                    const container = document.getElementById('disclaimer-container');
+                    if(container) container.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('载入免责声明失败:', error);
+                    const container = document.getElementById('disclaimer-container');
+                    if(container) container.innerHTML = '<div class="p-6 text-center text-red-500 font-bold">无法载入 disclaimer.html，请确认文件存在。</div>';
+                });
+        });
+
+        // AI Core
+        async function callGeminiAPI(prompt, systemInstruction) {
+            try {
+                const response = await fetch('/api/gemini', { 
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ prompt: prompt, systemInstruction: systemInstruction }) 
+                });
+                const data = await response.json();
+                if (!response.ok) return `连线错误：${data.error || '未知错误'}`;
+                let rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "抱歉，无法产生有效回复。";
+                return rawText.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+            } catch (error) { return `网络连线失败。(${error.message})`; }
+        }
+
+        // AI Chat
+        const standardPrompt = `你是 NTAM 内部研究员的专属 AI 助理。请协助分析师总结 NVIDIA (NVDA) Q1 2027 财报数据。请用客观、精炼的简体中文回答，使用 HTML <b> 加粗重点，严禁使用 markdown 语法。`;
+        function toggleChat() { document.getElementById('chat-window').classList.toggle('hidden'); }
+        function appendMessage(text, isUser) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = isUser ? 'bg-blue-100 text-blue-900 rounded-tr-none rounded-2xl ml-auto max-w-[85%] p-3 text-sm shadow-sm' : 'bg-white border border-slate-200 text-slate-700 rounded-tl-none rounded-2xl mr-auto max-w-[85%] p-3 text-sm shadow-sm leading-relaxed';
+            msgDiv.innerHTML = text; document.getElementById('chat-messages').appendChild(msgDiv); 
+            document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
+        }
+        function showTypingIndicator() {
+            const ind = document.createElement('div'); ind.id = 'typing-indicator'; 
+            ind.className = 'bg-slate-200 text-slate-500 rounded-tl-none rounded-2xl mr-auto max-w-[85%] p-3 text-sm shadow-sm flex gap-1 items-center h-10';
+            ind.innerHTML = '<div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div><div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div><div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>';
+            document.getElementById('chat-messages').appendChild(ind);
+        }
+        async function handleChatSubmit(e) {
+            e.preventDefault(); const input = document.getElementById('chat-input'); const text = input.value.trim(); if (!text) return;
+            input.value = ''; appendMessage(text, true); showTypingIndicator();
+            const res = await callGeminiAPI(text, standardPrompt);
+            document.getElementById('typing-indicator')?.remove(); appendMessage(res, false);
+        }
+
+        // Highlight AI
+        let selectedText = "";
+        document.addEventListener('mouseup', function(e) {
+            const text = window.getSelection().toString().trim(); const tooltip = document.getElementById('selection-tooltip');
+            if (e.target.closest('#selection-tooltip') || e.target.closest('#explain-modal') || e.target.closest('#ai-chat-widget')) return;
+            if (text.length > 1 && text.length < 50) {
+                selectedText = text; const rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
+                tooltip.style.left = `${rect.left + (rect.width / 2) - 60}px`; tooltip.style.top = `${rect.top - 40}px`;
+                tooltip.classList.remove('hidden', 'opacity-0', 'scale-95'); tooltip.classList.add('opacity-100', 'scale-100');
+            } else { tooltip.classList.add('hidden', 'opacity-0', 'scale-95'); }
+        });
+        document.addEventListener('mousedown', function(e) { if (!e.target.closest('#selection-tooltip')) document.getElementById('selection-tooltip').classList.add('hidden', 'opacity-0', 'scale-95'); });
+        async function explainSelectedTerm() {
+            document.getElementById('selection-tooltip').classList.add('hidden');
+            document.getElementById('explain-term-title').textContent = selectedText; 
+            document.getElementById('explain-result').classList.add('hidden'); document.getElementById('explain-loading').classList.remove('hidden'); document.getElementById('explain-modal').classList.remove('hidden');
+            const res = await callGeminiAPI(`解释这个 NVDA 相关词汇：${selectedText}`, "你是金融专家，用最白话简体中文解释词汇。限 150 字，重点用 <b> 包覆。");
+            document.getElementById('explain-loading').classList.add('hidden'); document.getElementById('explain-result').innerHTML = res; document.getElementById('explain-result').classList.remove('hidden');
+        }
+        function closeExplainModal() { document.getElementById('explain-modal').classList.add('hidden'); window.getSelection().removeAllRanges(); }
+        
+        // 🔮 沙盒生成脚本
+        async function generateCustomScenario() {
+            const inputEl = document.getElementById('custom-scenario-input'); const btnEl = document.getElementById('btn-generate-scenario'); 
+            const loadingEl = document.getElementById('scenario-loading'); const resultEl = document.getElementById('scenario-result');
+            const scenarioText = inputEl.value.trim(); if (!scenarioText) { alert('请先输入假设情境！'); return; }
+            btnEl.disabled = true; btnEl.classList.add('opacity-50'); loadingEl.classList.remove('hidden'); resultEl.classList.add('hidden');
+            
+            const sysPrompt = `你是华尔街资深分析师。基于 NVDA 本季营收大增 85%、面临严格的出口管制限制与开源模型竞争等事实，评估用户的“假设情境”。
+请简明扼要地回复：1. 初步评估 2. 对营收/利润潜在影响 3. 股价可能反应。
+使用简体中文，并用 HTML <b> 标签加粗重点，严禁使用 markdown 语法。总字数约 200 字。`;
+
+            const aiAnalysis = await callGeminiAPI(`推演这个情境：${scenarioText}`, sysPrompt);
+            loadingEl.classList.add('hidden'); btnEl.disabled = false; btnEl.classList.remove('opacity-50');
+            resultEl.innerHTML = `<h4 class="font-bold text-indigo-900 mb-3 border-b border-indigo-100 pb-2">🎯 AI 情境推演结果</h4>` + aiAnalysis; 
+            resultEl.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
