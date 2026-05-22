@@ -31,7 +31,6 @@
 </head>
 <body class="antialiased flex flex-col min-h-screen">
 
-    <!-- PI Modal -->
     <div id="pi-modal" class="fixed inset-0 z-[9999] bg-slate-900/85 backdrop-blur-sm flex flex-col items-center justify-center px-4" style="display: none;">
         <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full p-6 md:p-8 relative overflow-y-auto max-h-[90vh]">
             <div class="text-center mb-6">
@@ -66,6 +65,7 @@
             <div class="flex justify-between items-start">
                 <div class="flex flex-col">
                     <a href="index.html" class="flex items-center space-x-2 pb-2 mb-2 border-b border-slate-100 hover:opacity-75 transition-opacity cursor-pointer">
+                        <img src="NTAM%20Logo.png" alt="NTAM Logo" class="h-8 w-auto" onerror="this.style.display='none'">
                         <span class="text-sm font-bold text-slate-700 tracking-wider">NICE TALENT ASSET MANAGEMENT</span>
                     </a>
                     <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">蔚來汽車 <span class="text-blue-600">NIO</span></h1>
@@ -171,7 +171,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="metric-card">
-                    <h3 class="text-lg font-bold text-slate-800 mb-2">Q1 交付品牌結構 (台)</h3>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Q1 交付 brand 結構 (台)</h3>
                     <p class="text-xs text-slate-500 mb-4">蔚來基石品牌維持大頭，新拓展的樂道與螢火蟲品牌進展順利。</p>
                     <div class="chart-container"><canvas id="segmentRevenueChart"></canvas></div>
                 </div>
@@ -331,7 +331,6 @@
 
     </main>
 
-    <!-- AI Chat Widget -->
     <div id="ai-chat-widget" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
         <div id="chat-window" class="hidden animate-slide-up mb-4 w-[340px] sm:w-[400px] h-[500px] bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden">
             <div class="bg-blue-600 text-white p-4 flex justify-between items-center shadow-md z-10">
@@ -438,17 +437,15 @@
             const input = document.getElementById('chat-input');
             const text = input.value.trim(); if (!text) return;
             input.value = '';
-            // Fetch logic remains the same...
         }
 
         async function generateCustomScenario() {
             const resultEl = document.getElementById('scenario-result');
             const loadingEl = document.getElementById('scenario-loading');
             loadingEl.classList.remove('hidden'); resultEl.classList.add('hidden');
-            // Mock delay
             setTimeout(() => {
                 loadingEl.classList.add('hidden'); resultEl.classList.remove('hidden');
-                resultEl.innerHTML = "<b>AI 情境分析已更新：</b> 移除 Citation 標註後的資料庫檢索更為流暢。";
+                resultEl.innerHTML = "<b>AI 情境分析已更新。</b>";
             }, 1000);
         }
     </script>
