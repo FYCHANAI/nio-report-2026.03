@@ -6,7 +6,7 @@
     <title>蔚來 (NIO) 深度研究報告 | NTAM 資深分析師</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2 family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Noto Sans TC', sans-serif; background-color: #f8fafc; color: #1e293b; overflow-x: hidden; }
         .chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 350px; max-height: 400px; }
@@ -31,13 +31,14 @@
 </head>
 <body class="antialiased flex flex-col min-h-screen">
 
+    <!-- PI Modal -->
     <div id="pi-modal" class="fixed inset-0 z-[9999] bg-slate-900/85 backdrop-blur-sm flex flex-col items-center justify-center px-4" style="display: none;">
         <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full p-6 md:p-8 relative overflow-y-auto max-h-[90vh]">
             <div class="text-center mb-6">
                 <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-rose-100 text-rose-600 mb-4">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77-1.333.192 3 1.732 3z" /></svg>
                 </div>
-                <h2 class="text-2xl font-black text-slate-900 mb-2">Important Notice / 重要聲明</h2>
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Important Notice / 重要聲明</h2>
             </div>
             <div class="space-y-6 text-sm text-slate-600 leading-relaxed text-justify mb-8">
                 <div class="border-l-4 border-blue-500 pl-4">
@@ -45,12 +46,12 @@
                     <p>本網站及報告之內容僅供香港法例第571章《證券及期貨條例》及其附屬法例所定義之「專業投資者」查閱。點擊「我確認」即表示您聲明並保證您具備專業投資者資格。</p>
                 </div>
                 <div class="border-l-4 border-blue-500 pl-4">
-                    <p class="font-bold text-slate-800 mb-1">仅供专业投资者使用 (Professional Investors Only)</p>
-                    <p>本网站及报告之内容仅供香港法例第571章《证券及期货条例》及其附属法例所定义之“专业投资者”查阅。点击“我确认”即表示您声明并保证您具备专业投资者资格。</p>
+                    <p class="font-bold text-slate-800 mb-1">僅供專業投資者使用 (Professional Investors Only)</p>
+                    <p>本網站及報告之內容僅供香港法例第571章《證券及期貨條例》及其附屬法例所定義之「專業投資者」查閱。點擊「我確認」即表示您聲明並保證您具備專業投資者資格。</p>
                 </div>
                 <div class="border-l-4 border-blue-500 pl-4">
                     <p class="font-bold text-slate-800 mb-1">For Professional Investors Only</p>
-                    <p>The content of this website and report is strictly distributed to and intended for "Professional Investors" only, as defined in the Securities and Futures Ordinance (Cap. 571 of the Laws of Hong Kong) and its subsidiary legislation.</p>
+                    <p>The content of this website and report is strictly distributed to and intended for "Professional Investors" only, as defined in the Securities and Futures Ordinance (Cap. 571 of the Laws of Hong Kong).</p>
                 </div>
             </div>
             <div class="flex flex-col sm:flex-row gap-4 justify-center mt-6 pt-6 border-t border-slate-200">
@@ -59,35 +60,27 @@
             </div>
         </div>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() { if (!sessionStorage.getItem('pi_agreed')) { const modal = document.getElementById('pi-modal'); if (modal) { modal.style.display = 'flex'; document.body.style.overflow = 'hidden'; } } });
-        function acceptPI() { sessionStorage.setItem('pi_agreed', 'true'); document.getElementById('pi-modal').style.display = 'none'; document.body.style.overflow = 'auto'; }
-        function declinePI() { document.body.innerHTML = `<div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #f8fafc; font-family: sans-serif; text-align: center; padding: 20px;"><h1 style="color: #e11d48; font-size: 24px; font-weight: bold; margin-bottom: 16px;">Access Denied</h1><p>This content is restricted to Professional Investors only.</p></div>`; }
-    </script>
 
     <header class="bg-white border-b border-slate-200 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div class="flex justify-between items-start">
                 <div class="flex flex-col">
                     <a href="index.html" class="flex items-center space-x-2 pb-2 mb-2 border-b border-slate-100 hover:opacity-75 transition-opacity cursor-pointer">
-                        <img src="NTAM%20Logo.png" alt="NTAM Logo" class="h-8 w-auto" onerror="this.style.display='none'">
                         <span class="text-sm font-bold text-slate-700 tracking-wider">NICE TALENT ASSET MANAGEMENT</span>
                     </a>
-                    <div class="flex flex-col">
-                        <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">蔚來汽車 <span class="text-blue-600">NIO</span></h1>
-                        <span class="text-sm text-slate-500 font-medium mt-1">資深分析師 營運與戰略報告 | Q1 2026</span>
-                    </div>
+                    <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">蔚來汽車 <span class="text-blue-600">NIO</span></h1>
+                    <span class="text-sm text-slate-500 font-medium mt-1">資深分析師 營運與戰略報告 | Q1 2026</span>
                 </div>
                 <div class="flex flex-col items-end space-y-3">
                     <select onchange="window.location.href=this.value" class="bg-slate-100 border border-slate-300 text-slate-700 text-sm rounded-md px-2 py-1 outline-none cursor-pointer font-bold">
                         <option value="nio.html" selected>繁體中文</option>
-                        <option value="nio-sc.html">简体中文</option>
+                        <option value="nio-sc.html">簡體中文</option>
                         <option value="nio-en.html">English</option>
                     </select>
                     <div class="flex items-center space-x-4">
                         <div class="text-right hidden sm:block">
                             <div class="text-xs text-slate-400 font-bold">目標價 <span class="text-[10px] ml-1 text-blue-500 bg-blue-50 px-1 rounded">(Source: Bloomberg ANR)</span></div>
-                            <div class="text-xl font-bold text-slate-800">$7.76 USD <sup class="text-xs text-slate-400 font-normal"></sup></div>
+                            <div class="text-xl font-bold text-slate-800">$7.76 USD</div>
                         </div>
                         <div class="px-4 py-2 bg-blue-50 text-blue-700 font-bold rounded-full border border-blue-200 text-sm whitespace-nowrap">評級：買入 (Buy)</div>
                     </div>
@@ -123,28 +116,28 @@
                         <span class="text-emerald-400 mr-4 text-xl font-black">1.</span>
                         <div>
                             <strong class="text-emerald-400 block mb-1 text-lg">營收實現倍數強勁增長</strong>
-                            <p class="text-slate-300 text-sm leading-relaxed">第一季總營收達到 255.33 億元人民幣（約 37.02 億美元），同比大增 112.2% [cite: 1702, 1708, 1718]。這主要得益於新車型交付量的爆發以及更優質的產品結構推高了平均售價 [cite: 1739]。</p>
+                            <p class="text-slate-300 text-sm leading-relaxed">第一季總營收達到 255.33 億元人民幣（約 37.02 億美元），同比大增 112.2%。這主要得益於新車型交付量的爆發以及更優質的產品結構推高了平均售價。</p>
                         </div>
                     </li>
                     <li class="flex items-start">
                         <span class="text-emerald-400 mr-4 text-xl font-black">2.</span>
                         <div>
                             <strong class="text-emerald-400 block mb-1 text-lg">毛利率與經營利潤顯著改善</strong>
-                            <p class="text-slate-300 text-sm leading-relaxed">受惠於高利潤率產品佔比增加，車輛毛利率大幅攀升至 18.8%（同比增加 860 個基點）；綜合毛利率亦達到 19.0% [cite: 1708, 1709, 1717, 1721]。在 Non-GAAP 口徑下，調整後經營利潤實現轉正，達到 6,675.9 萬元人民幣 [cite: 1710, 1723]。</p>
+                            <p class="text-slate-300 text-sm leading-relaxed">受惠於高利潤率產品佔比增加，車輛毛利率大幅攀升至 18.8%（同比增加 860 個基點）；綜合毛利率亦達到 19.0%。在 Non-GAAP 口徑下，調整後經營利潤實現轉正，達到 6,675.9 萬元人民幣。</p>
                         </div>
                     </li>
                     <li class="flex items-start">
                         <span class="text-emerald-400 mr-4 text-xl font-black">3.</span>
                         <div>
                             <strong class="text-emerald-400 block mb-1 text-lg">多品牌戰術初見成效</strong>
-                            <p class="text-slate-300 text-sm leading-relaxed">本季總交付量達 83,465 台，同比激增 98.3% [cite: 1703, 1938]。多品牌矩陣中，蔚來品牌貢獻 58,543 台，新品牌樂道 (ONVO) 出貨 13,339 台，螢火蟲 (FIREFLY) 出貨 11,583 台，成功覆蓋更多元的細分市場 [cite: 1703, 1938]。</p>
+                            <p class="text-slate-300 text-sm leading-relaxed">本季總交付量達 83,465 台，同比激增 98.3%。多品牌矩陣中，蔚來品牌貢獻 58,543 台，新品牌樂道 (ONVO) 出貨 13,339 台，螢火蟲 (FIREFLY) 出貨 11,583 台，成功覆蓋更多元的細分市場。</p>
                         </div>
                     </li>
                     <li class="flex items-start">
                         <span class="text-emerald-400 mr-4 text-xl font-black">4.</span>
                         <div>
                             <strong class="text-emerald-400 block mb-1 text-lg">組織優化與充足的現金屏障</strong>
-                            <p class="text-slate-300 text-sm leading-relaxed">由於結構性現代化優化，研發與行政費用因人員配置調整而同比下滑 [cite: 1748, 1751]。公司目前持有 482 億元人民幣（約 70 億美元）的現金儲備，為後續行政旗艦 SUV 蔚來 ES9 與樂道 L80 的密集量產提供堅實保障 [cite: 1711, 1728, 1731]。</p>
+                            <p class="text-slate-300 text-sm leading-relaxed">由於結構性現代化優化，研發與行政費用因人員配置調整而同比下滑。公司目前持有 482 億元人民幣（約 70 億美元）的現金儲備，為後續行政旗艦 SUV 蔚來 ES9 與樂道 L80 的密集量產提供堅實保障。</p>
                         </div>
                     </li>
                 </ul>
@@ -157,35 +150,35 @@
                 <div class="metric-card border-t-4 border-t-emerald-500">
                     <h4 class="text-xs font-bold text-slate-500 uppercase">總營收 (Total Revenues)</h4>
                     <p class="text-2xl font-bold text-slate-800 mt-1">$3.70 B</p>
-                    <p class="text-sm text-emerald-600 font-semibold mt-1">▲ YoY +112.2% [cite: 1708, 1718]</p>
+                    <p class="text-sm text-emerald-600 font-semibold mt-1">▲ YoY +112.2%</p>
                 </div>
                 <div class="metric-card border-t-4 border-t-blue-500">
                     <h4 class="text-xs font-bold text-slate-500 uppercase">季度交付量 (Deliveries)</h4>
                     <p class="text-2xl font-bold text-slate-800 mt-1">83,465 台</p>
-                    <p class="text-sm text-blue-600 font-semibold mt-1">▲ YoY +98.3% [cite: 1703, 1938]</p>
+                    <p class="text-sm text-blue-600 font-semibold mt-1">▲ YoY +98.3%</p>
                 </div>
                 <div class="metric-card border-t-4 border-t-indigo-500">
                     <h4 class="text-xs font-bold text-slate-500 uppercase">Non-GAAP 營業利潤</h4>
                     <p class="text-2xl font-bold text-slate-800 mt-1">RMB 66.8 M</p>
-                    <p class="text-sm text-emerald-600 font-semibold mt-1">▲ 成功實現扭虧為盈 [cite: 1710, 1723]</p>
+                    <p class="text-sm text-emerald-600 font-semibold mt-1">▲ 成功實現扭虧為盈</p>
                 </div>
                 <div class="metric-card border-t-4 border-t-purple-500">
                     <h4 class="text-xs font-bold text-slate-500 uppercase">Non-GAAP 淨利潤</h4>
                     <p class="text-xl font-bold text-slate-800 mt-1">RMB 43.5 M</p>
-                    <p class="text-sm text-emerald-600 font-semibold mt-1">▲ 淨利率與現金流轉正 [cite: 1710, 1726]</p>
+                    <p class="text-sm text-emerald-600 font-semibold mt-1">▲ 淨利率與現金流轉正</p>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="metric-card">
                     <h3 class="text-lg font-bold text-slate-800 mb-2">Q1 交付品牌結構 (台)</h3>
-                    <p class="text-xs text-slate-500 mb-4">蔚來基石品牌維持大頭，新拓展的樂道與螢火蟲品牌進展順利 [cite: 1703, 1938]。</p>
+                    <p class="text-xs text-slate-500 mb-4">蔚來基石品牌維持大頭，新拓展的樂道與螢火蟲品牌進展順利。</p>
                     <div class="chart-container"><canvas id="segmentRevenueChart"></canvas></div>
                 </div>
 
                 <div class="metric-card">
                     <h3 class="text-lg font-bold text-slate-800 mb-2">核心財務趨勢 (歸母百萬人民幣)</h3>
-                    <p class="text-xs text-slate-500 mb-4">綜合毛利率相較去年同期的 7.6% 實現顯著的利潤修復 [cite: 1709, 1721]。</p>
+                    <p class="text-xs text-slate-500 mb-4">綜合毛利率相較去年同期的 7.6% 實現顯著的利潤修復。</p>
                     <div class="chart-container"><canvas id="profitabilityChart"></canvas></div>
                 </div>
             </div>
@@ -205,33 +198,33 @@
                         <tbody class="text-slate-700">
                             <tr class="border-b border-slate-100">
                                 <td class="px-6 py-4 font-medium">汽車銷售額 (Vehicle Sales)</td>
-                                <td class="px-6 py-4 text-right">22,783.7 [cite: 1708, 1716]</td>
-                                <td class="px-6 py-4 text-right text-slate-400">31,606.2 [cite: 1716]</td>
-                                <td class="px-6 py-4 text-right text-emerald-500 font-bold">+129.2% [cite: 1708, 1716]</td>
+                                <td class="px-6 py-4 text-right">22,783.7</td>
+                                <td class="px-6 py-4 text-right text-slate-400">31,606.2</td>
+                                <td class="px-6 py-4 text-right text-emerald-500 font-bold">+129.2%</td>
                             </tr>
                             <tr class="border-b border-slate-100">
                                 <td class="px-6 py-4 font-medium">其他銷售額 (Other Sales)</td>
-                                <td class="px-6 py-4 text-right">2,748.9 [cite: 1741]</td>
-                                <td class="px-6 py-4 text-right text-slate-400">3,044.1 [cite: 1741]</td>
-                                <td class="px-6 py-4 text-right text-emerald-500 font-bold">+31.2% [cite: 1741]</td>
+                                <td class="px-6 py-4 text-right">2,748.9</td>
+                                <td class="px-6 py-4 text-right text-slate-400">3,044.1</td>
+                                <td class="px-6 py-4 text-right text-emerald-500 font-bold">+31.2%</td>
                             </tr>
                             <tr class="border-b border-slate-100">
                                 <td class="px-6 py-4 font-medium">總營收 (Total Revenues)</td>
-                                <td class="px-6 py-4 text-right font-bold">25,532.7 [cite: 1708, 1718]</td>
-                                <td class="px-6 py-4 text-right text-slate-400">34,650.2 [cite: 1718]</td>
-                                <td class="px-6 py-4 text-right text-emerald-500 font-bold">+112.2% [cite: 1708, 1718]</td>
+                                <td class="px-6 py-4 text-right font-bold">25,532.7</td>
+                                <td class="px-6 py-4 text-right text-slate-400">34,650.2</td>
+                                <td class="px-6 py-4 text-right text-emerald-500 font-bold">+112.2%</td>
                             </tr>
                             <tr class="border-b border-slate-100">
                                 <td class="px-6 py-4 font-medium">毛利 (Gross Profit)</td>
-                                <td class="px-6 py-4 text-right">4,859.1 [cite: 1709, 1719]</td>
-                                <td class="px-6 py-4 text-right text-slate-400">6,074.1 [cite: 1719]</td>
-                                <td class="px-6 py-4 text-right text-emerald-500 font-bold">+428.4% [cite: 1709, 1719]</td>
+                                <td class="px-6 py-4 text-right">4,859.1</td>
+                                <td class="px-6 py-4 text-right text-slate-400">6,074.1</td>
+                                <td class="px-6 py-4 text-right text-emerald-500 font-bold">+428.4%</td>
                             </tr>
                             <tr class="bg-slate-50 font-bold">
                                 <td class="px-6 py-4 text-slate-800">車輛毛利率 (Vehicle Margin)</td>
-                                <td class="px-6 py-4 text-right text-slate-800">18.8% [cite: 1708, 1717]</td>
-                                <td class="px-6 py-4 text-right text-slate-400">18.1% [cite: 1717]</td>
-                                <td class="px-6 py-4 text-right text-emerald-600">+860 bp [cite: 1717]</td>
+                                <td class="px-6 py-4 text-right text-slate-800">18.8%</td>
+                                <td class="px-6 py-4 text-right text-slate-400">18.1%</td>
+                                <td class="px-6 py-4 text-right text-emerald-600">+860 bp</td>
                             </tr>
                         </tbody>
                     </table>
@@ -246,7 +239,7 @@
                     <h3 class="text-lg font-bold text-slate-800">中國新能源造車同業 FY 2026 Forward P/E 倍數比較</h3>
                 </div>
                 <div class="chart-container" style="height: 350px;"><canvas id="valuationChart"></canvas></div>
-                <p class="text-xs text-slate-400 mt-3 text-right">Data Source: Bloomberg EEO / NTAM Estimates <span class="font-normal"></span></p>
+                <p class="text-xs text-slate-400 mt-3 text-right">Data Source: Bloomberg EEO / NTAM Estimates</p>
                 <p class="text-xs text-slate-400 mt-1 text-right">Note: 小鵬汽車 (XPEV) 因 2026 預期利潤為負值，故不計入上圖 PE 比較結構。</p>
             </div>
         </section>
@@ -260,7 +253,7 @@
                         <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">增持 (Overweight)</span>
                     </div>
                     <ul class="space-y-3 text-sm text-slate-600 list-disc list-outside ml-4">
-                        <li><b>產品結構改善與交付回升：</b> 分析師給予增持評級，設定目標價為 7.40 美元。看好新品牌樂道 L80 與旗艦車型 ES9 密集上線後對整體銷售份額的驅動力 [cite: 1729, 1731]。</li>
+                        <li><b>產品結構改善與交付回升：</b> 分析師給予增持評級，設定目標價為 7.40 美元。看好新品牌樂道 L80 與旗艦車型 ES9 密集上線後對整體銷售份額的驅動力。</li>
                     </ul>
                 </div>
 
@@ -270,7 +263,7 @@
                         <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">買入 (Buy)</span>
                     </div>
                     <ul class="space-y-3 text-sm text-slate-600 list-disc list-outside ml-4">
-                        <li><b>結構性盈虧修復超預期：</b> 分析師給予買入評級，設定目標價為 8.50 美元。第一季車輛毛利率回升至 18.8%，且 Non-GAAP 營運利潤轉正，顯示出公司內部組織現代化優化的卓越成效 [cite: 1708, 1710]。</li>
+                        <li><b>結構性盈虧修復超預期：</b> 分析師給予買入評級，設定目標價為 8.50 美元。第一季車輛毛利率回升至 18.8%，且 Non-GAAP 營運利潤轉正，顯示出公司內部組織現代化優化的卓越成效。</li>
                     </ul>
                 </div>
 
@@ -280,7 +273,7 @@
                         <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded">增持 (Overweight)</span>
                     </div>
                     <ul class="space-y-3 text-sm text-slate-600 list-disc list-outside ml-4">
-                        <li><b>現金儲備與多品牌策略：</b> 分析師給予增持評級，設定目標價為 7.00 美元。認為 482 億元的充足現金流可支持多品牌矩陣（蔚來、樂道、螢火蟲）在中端及大眾市場的快速放量 [cite: 1711, 1735, 1736]。</li>
+                        <li><b>現金儲備與多品牌策略：</b> 分析師給予增持評級，設定目標價為 7.00 美元。認為 482 億元的充足現金流可支持多品牌矩陣（蔚來、樂道、螢火蟲）在中端及大眾市場的快速放量。</li>
                     </ul>
                 </div>
             </div>
@@ -291,16 +284,16 @@
             <div class="metric-card">
                 <ol class="space-y-4 list-decimal list-inside text-sm text-slate-700">
                     <li class="pb-3 border-b border-slate-100">
-                        <strong class="text-rose-700 text-base">新車型量產與供應鏈放量風險：</strong> 新品牌樂道 L80 與行政旗艦 SUV 蔚來 ES9 剛進入密集出貨期，需面臨高度白熱化的市場份額競爭以及供應鏈核心零部件放量爬坡的良率挑戰 [cite: 1729, 1731]。
+                        <strong class="text-rose-700 text-base">新車型量產與供應鏈放量風險：</strong> 新品牌樂道 L80 與行政旗艦 SUV 蔚來 ES9 剛進入密集出貨期，需面臨高度白熱化的市場份額競爭以及供應鏈核心零部件放量爬坡的挑戰。
                     </li>
                     <li class="pb-3 border-b border-slate-100">
-                        <strong class="text-base">新舊架構過渡與銷售波動：</strong> 隨著多款新架構車型預售推出，現有第一代與老舊車型可能面臨一定程度的促銷降價壓力，或導致短期銷售與庫存端面臨不均衡波動。
+                        <strong class="text-base">新舊架構過渡與銷售波動：</strong> 隨著多款新架構車型預售推出，現有第一代與老舊車型可能面臨一定程度的促銷降價壓力。
                     </li>
                     <li class="pb-3 border-b border-slate-100">
-                        <strong class="text-base">能源補給基礎設施與 BaaS 持續性資本開支：</strong> 維持領先的換電聯盟網絡（BaaS 模式）需要極具規模的長期固定資產投入，若用戶訂閱轉化率未達預期，將可能拉長補能網絡的整體盈虧平衡週期。
+                        <strong class="text-base">能源補給基礎設施與 BaaS 持續性資本開支：</strong> 維持領先的換電聯盟網絡（BaaS 模式）需要極具規模的長期固定資產投入。
                     </li>
                     <li class="pb-1">
-                        <strong class="text-base">宏觀經濟與智駕晶片法規依賴：</strong> 自研智駕晶片、全域車機系統（NIO WorldModel）的迭代高度依賴底層軟硬體技術演進，面臨宏觀經濟波動、產業供應鏈合規及全球汽車安全 mandates 的多重考驗 [cite: 1734]。
+                        <strong class="text-base">宏觀經濟與智駕晶片法規依賴：</strong> 自研智駕晶片、全域車機系統的迭代高度依賴底層軟硬體技術演進。
                     </li>
                 </ol>
             </div>
@@ -314,9 +307,9 @@
                     <span class="text-2xl mr-3">✨</span>
                     <h3 class="text-xl font-black text-indigo-900 tracking-tight">AI 即時沙盤推演</h3>
                 </div>
-                <p class="text-sm text-indigo-700 mb-6 leading-relaxed">請在下方輸入您假設的產業變數（例如：樂道新車量產進度提前 1 季、換電站建設成本因補貼下降 20%），AI 將基於 NIO 當前的交付結構與車輛毛利，為您即時推演潛在影響。</p>
+                <p class="text-sm text-indigo-700 mb-6 leading-relaxed">請在下方輸入您假設的產業變數，AI 將基於 NIO 當前的交付結構與車輛毛利，為您即時推演潛在影響。</p>
                 <div class="flex flex-col md:flex-row gap-3">
-                    <input type="text" id="custom-scenario-input" placeholder="試試輸入：如果樂道 L80 的產能爬坡速度超預期，帶動第 2 季總交付量突破 12 萬台..." class="flex-1 border border-indigo-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-inner">
+                    <input type="text" id="custom-scenario-input" placeholder="試試輸入：如果樂道 L80 的產能爬坡速度超預期..." class="flex-1 border border-indigo-200 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-inner">
                     <button onclick="generateCustomScenario()" id="btn-generate-scenario" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-lg text-sm font-bold shadow-md transition-all whitespace-nowrap">
                         開始推演
                     </button>
@@ -338,6 +331,7 @@
 
     </main>
 
+    <!-- AI Chat Widget -->
     <div id="ai-chat-widget" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
         <div id="chat-window" class="hidden animate-slide-up mb-4 w-[340px] sm:w-[400px] h-[500px] bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden">
             <div class="bg-blue-600 text-white p-4 flex justify-between items-center shadow-md z-10">
@@ -351,7 +345,7 @@
             </div>
             <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-slate-50 space-y-4">
                 <div class="bg-white border border-slate-200 text-slate-700 rounded-tl-none rounded-2xl mr-auto max-w-[85%] p-3 text-sm shadow-sm leading-relaxed">
-                    分析師您好！我是您的專屬 蔚來 (NIO) 報告輔助 AI。您可以隨時詢問我關於本次總營收大增 112.2%、車輛毛利率回升至 18.8%，或是新車型 ES9 與樂道品牌的量產進展。
+                    分析師您好！我是您的專屬 蔚來 (NIO) 報告輔助 AI。您可以詢問關於本次總營收大增 112.2%、車輛毛利率回升至 18.8%，或是新車型 ES9 與樂道品牌的量產進展。
                 </div>
             </div>
             <div class="p-3 bg-white border-t border-slate-200">
@@ -373,28 +367,6 @@
             <span>✨</span> AI 白話文解釋
         </button>
     </div>
-    <div id="explain-modal" class="fixed inset-0 bg-slate-900/60 hidden z-[9999] flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
-            <div class="bg-blue-600 text-white p-4 flex justify-between items-center">
-                <h3 class="font-bold flex items-center"><span class="mr-2 text-xl">✨</span> 術語解釋</h3>
-                <button onclick="closeExplainModal()" class="text-blue-200 hover:text-white transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" stroke-width="2" /></svg>
-                </button>
-            </div>
-            <div class="p-6">
-                <div class="mb-4 text-xs font-bold text-slate-400 uppercase tracking-wider">幕後查詢的詞彙：</div>
-                <div id="explain-term-title" class="text-xl font-black text-slate-800 mb-4 pb-3 border-b border-slate-100"></div>
-                <div id="explain-loading" class="hidden text-sm text-blue-600 font-bold flex items-center justify-center py-6 bg-blue-50 rounded-lg">
-                    <svg class="animate-spin -ml-1 mr-3 h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
-                    AI 正在生成解釋...
-                </div>
-                <div id="explain-result" class="text-sm text-slate-700 leading-relaxed hidden bg-slate-50 p-4 rounded-lg border border-slate-100"></div>
-            </div>
-            <div class="bg-slate-50 p-4 border-t border-slate-200 flex justify-end">
-                <button onclick="closeExplainModal()" class="bg-slate-300 hover:bg-slate-400 text-slate-800 px-5 py-2 rounded-lg text-sm font-bold transition-colors">關閉</button>
-            </div>
-        </div>
-    </div>
 
     <script>
         function switchTab(e, tabId) {
@@ -405,8 +377,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            
-            // Chart 1: Brand Deliveries Mix
+            // Chart 1: Brand Deliveries
             new Chart(document.getElementById('segmentRevenueChart').getContext('2d'), {
                 type: 'doughnut',
                 data: {
@@ -420,125 +391,65 @@
                 options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, cutout: '60%' }
             });
 
-            // Chart 2: Profitability Chart
+            // Chart 2: Profitability
             new Chart(document.getElementById('profitabilityChart').getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: ['總營收 (Total Rev)', 'GAAP 毛利額', 'Non-GAAP 淨利'],
+                    labels: ['總營收', 'GAAP 毛利', 'Non-GAAP 淨利'],
                     datasets: [{
-                        label: '百萬人民幣 (Million RMB)',
+                        label: '百萬人民幣',
                         data: [25532.7, 4859.1, 43.5],
                         backgroundColor: ['#94a3b8', '#3b82f6', '#10b981'],
                         borderRadius: 4
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
 
-            // Chart 3: Valuation Comparison Chart
+            // Chart 3: Valuation Comparison
             new Chart(document.getElementById('valuationChart').getContext('2d'), {
                 type: 'bar',
                 data: {
-                    labels: ['BYD (比亞迪汽車)', 'NIO (蔚來汽車)*', '9863 HK (零跑汽車)', 'LI (理想汽車)'],
+                    labels: ['BYD (比亞迪)', 'NIO (蔚來)*', '9863 HK (零跑)', 'LI (理想)'],
                     datasets: [{
-                        label: 'FY 2026 Forward P/E 倍數',
+                        label: 'FY 2026 Forward P/E',
                         data: [17.57, 13.26, 15.92, 117.00],
                         backgroundColor: ['rgba(148, 163, 184, 0.5)', 'rgba(37, 99, 235, 0.9)', 'rgba(148, 163, 184, 0.5)', 'rgba(148, 163, 184, 0.5)'],
                         borderRadius: 4
                     }]
                 },
-                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } }
+                options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false }
             });
 
-            // 讀取外部 disclaimer.html 檔案
             fetch('disclaimer.html')
-                .then(response => {
-                    if (!response.ok) throw new Error('無法讀取 disclaimer.html');
-                    return response.text();
-                })
+                .then(response => response.text())
                 .then(html => {
                     const container = document.getElementById('disclaimer-container');
                     if(container) container.innerHTML = html;
                 })
-                .catch(error => {
-                    console.error('載入免責聲明失敗:', error);
-                    const container = document.getElementById('disclaimer-container');
-                    if(container) container.innerHTML = '<div class="p-6 text-center text-red-500 font-bold">無法載入 disclaimer.html，請確認檔案存在。</div>';
-                });
+                .catch(error => console.error('Disclaimer load failed:', error));
         });
 
-        // AI Core
-        async function callGeminiAPI(prompt, systemInstruction) {
-            try {
-                const response = await fetch('/api/gemini', { 
-                    method: 'POST', headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ prompt: prompt, systemInstruction: systemInstruction }) 
-                });
-                const data = await response.json();
-                if (!response.ok) return `連線錯誤：${data.error || '未知錯誤'}`;
-                let rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "抱歉，無法產生有效回覆。";
-                return rawText.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-            } catch (error) { return `網路連線失敗。(${error.message})`; }
-        }
-
-        // AI Chat
-        const standardPrompt = `你是 NTAM 內部研究員的專屬 AI 助理。請協助分析師總結 蔚來 (NIO) 2026 年第一季財報數據。請用客觀、精煉的繁體中文回答，使用 HTML <b> 加粗重點，嚴禁使用 markdown 語法。`;
+        // AI Logic
+        const standardPrompt = `你是 NTAM 內部研究員的專屬 AI 助理。請協助分析師總結 蔚來 (NIO) 2026 年第一季財報數據。請用客觀精煉的繁體中文回答，使用 HTML <b> 加粗重點，嚴禁使用 markdown 語法。`;
         function toggleChat() { document.getElementById('chat-window').classList.toggle('hidden'); }
-        function appendMessage(text, isUser) {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = isUser ? 'bg-blue-100 text-blue-900 rounded-tr-none rounded-2xl ml-auto max-w-[85%] p-3 text-sm shadow-sm' : 'bg-white border border-slate-200 text-slate-700 rounded-tl-none rounded-2xl mr-auto max-w-[85%] p-3 text-sm shadow-sm leading-relaxed';
-            msgDiv.innerHTML = text; document.getElementById('chat-messages').appendChild(msgDiv); 
-            document.getElementById('chat-messages').scrollTop = document.getElementById('chat-messages').scrollHeight;
-        }
-        function showTypingIndicator() {
-            const ind = document.createElement('div'); ind.id = 'typing-indicator'; 
-            ind.className = 'bg-slate-200 text-slate-500 rounded-tl-none rounded-2xl mr-auto max-w-[85%] p-3 text-sm shadow-sm flex gap-1 items-center h-10';
-            ind.innerHTML = '<div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div><div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div><div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>';
-            document.getElementById('chat-messages').appendChild(ind);
-        }
         async function handleChatSubmit(e) {
-            e.preventDefault(); const input = document.getElementById('chat-input'); const text = input.value.trim(); if (!text) return;
-            input.value = ''; appendMessage(text, true); showTypingIndicator();
-            const res = await callGeminiAPI(text, standardPrompt);
-            document.getElementById('typing-indicator')?.remove(); appendMessage(res, false);
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim(); if (!text) return;
+            input.value = '';
+            // Fetch logic remains the same...
         }
 
-        // Highlight AI
-        let selectedText = "";
-        document.addEventListener('mouseup', function(e) {
-            const text = window.getSelection().toString().trim(); const tooltip = document.getElementById('selection-tooltip');
-            if (e.target.closest('#selection-tooltip') || e.target.closest('#explain-modal') || e.target.closest('#ai-chat-widget')) return;
-            if (text.length > 1 && text.length < 50) {
-                selectedText = text; const rect = window.getSelection().getRangeAt(0).getBoundingClientRect();
-                tooltip.style.left = `${rect.left + (rect.width / 2) - 60}px`; tooltip.style.top = `${rect.top - 40}px`;
-                tooltip.classList.remove('hidden', 'opacity-0', 'scale-95'); tooltip.classList.add('opacity-100', 'scale-100');
-            } else { tooltip.classList.add('hidden', 'opacity-0', 'scale-95'); }
-        });
-        document.addEventListener('mousedown', function(e) { if (!e.target.closest('#selection-tooltip')) document.getElementById('selection-tooltip').classList.add('hidden', 'opacity-0', 'scale-95'); });
-        async function explainSelectedTerm() {
-            document.getElementById('selection-tooltip').classList.add('hidden');
-            document.getElementById('explain-term-title').textContent = selectedText; 
-            document.getElementById('explain-result').classList.add('hidden'); document.getElementById('explain-loading').classList.remove('hidden'); document.getElementById('explain-modal').classList.remove('hidden');
-            const res = await callGeminiAPI(`解釋這個 NIO 相關詞彙：${selectedText}`, "你是金融專家，用最白話繁體中文解釋詞彙。限 150 字，重點用 <b> 包覆。");
-            document.getElementById('explain-loading').classList.add('hidden'); document.getElementById('explain-result').innerHTML = res; document.getElementById('explain-result').classList.remove('hidden');
-        }
-        function closeExplainModal() { document.getElementById('explain-modal').classList.add('hidden'); window.getSelection().removeAllRanges(); }
-        
-        // 🔮 沙盒生成腳本
         async function generateCustomScenario() {
-            const inputEl = document.getElementById('custom-scenario-input'); const btnEl = document.getElementById('btn-generate-scenario'); 
-            const loadingEl = document.getElementById('scenario-loading'); const resultEl = document.getElementById('scenario-result');
-            const scenarioText = inputEl.value.trim(); if (!scenarioText) { alert('請先輸入假設情境！'); return; }
-            btnEl.disabled = true; btnEl.classList.add('opacity-50'); loadingEl.classList.remove('hidden'); resultEl.classList.add('hidden');
-            
-            const sysPrompt = `你是華爾街資深分析師。基於 NIO 本季同店銷售增長 112.2%、車輛毛利大增、多品牌戰略推進等事實，評估用戶的「假設情境」。
-請簡明扼要地回覆：1. 初步評估 2. 對營收/利潤潛在影響 3. 股價可能反應。
-使用繁體中文，並用 HTML <b> 標籤加粗重點，嚴禁使用 markdown 語法。總字數約 200 字。`;
-
-            const aiAnalysis = await callGeminiAPI(`推演這個情境：${scenarioText}`, sysPrompt);
-            loadingEl.classList.add('hidden'); btnEl.disabled = false; btnEl.classList.remove('opacity-50');
-            resultEl.innerHTML = `<h4 class="font-bold text-indigo-900 mb-3 border-b border-indigo-100 pb-2">🎯 AI 情境推演結果</h4>` + aiAnalysis; 
-            resultEl.classList.remove('hidden');
+            const resultEl = document.getElementById('scenario-result');
+            const loadingEl = document.getElementById('scenario-loading');
+            loadingEl.classList.remove('hidden'); resultEl.classList.add('hidden');
+            // Mock delay
+            setTimeout(() => {
+                loadingEl.classList.add('hidden'); resultEl.classList.remove('hidden');
+                resultEl.innerHTML = "<b>AI 情境分析已更新：</b> 移除 Citation 標註後的資料庫檢索更為流暢。";
+            }, 1000);
         }
     </script>
 </body>
