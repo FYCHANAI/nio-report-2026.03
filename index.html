@@ -15,7 +15,7 @@ body { font-family: 'Noto Sans TC', sans-serif; background-color: #f4f6f9; color
 </head>
 <body class="antialiased min-h-screen flex flex-col">
 
-<!-- 合規性彈窗 -->
+<!-- 重要聲明彈窗 (參考 image_a21560.jpg 樣式，並補回 SC 版本) -->
 <div id="pi-modal" class="fixed inset-0 z-[9999] bg-slate-900/85 backdrop-blur-sm flex flex-col items-center justify-center px-4" style="display: none;">
     <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full p-6 md:p-8 relative overflow-y-auto max-h-[90vh]">
         <div class="text-center mb-6">
@@ -25,10 +25,17 @@ body { font-family: 'Noto Sans TC', sans-serif; background-color: #f4f6f9; color
             <h2 class="text-2xl font-black text-slate-900 mb-2">Important Notice / 重要聲明</h2>
         </div>
         <div class="space-y-6 text-sm text-slate-600 leading-relaxed text-justify mb-8">
+            <!-- 繁體中文 -->
             <div class="border-l-4 border-blue-500 pl-4">
                 <p class="font-bold text-slate-800 mb-1">僅供專業投資者使用 (Professional Investors Only)</p>
                 <p>本網站及報告之內容僅供香港法例第571章《證券及期貨條例》及其附屬法例所定義之「專業投資者」查閱。點擊「我確認」即表示您聲明並保證您具備專業投資者資格。</p>
             </div>
+            <!-- 簡體中文 (補回) -->
+            <div class="border-l-4 border-blue-500 pl-4">
+                <p class="font-bold text-slate-800 mb-1">仅供专业投资者使用 (Professional Investors Only)</p>
+                <p>本网站及报告之内容仅供香港法例第571章《证券及期货条例》及其附属法例所定义之“专业投资者”查阅。点击“我确认”即表示您声明并保证您具备专业投资者资格。</p>
+            </div>
+            <!-- 英文 -->
             <div class="border-l-4 border-blue-500 pl-4">
                 <p class="font-bold text-slate-800 mb-1">For Professional Investors Only</p>
                 <p>The content of this website and report is strictly distributed to and intended for "Professional Investors" only, as defined in the Securities and Futures Ordinance (Cap. 571 of the Laws of Hong Kong).</p>
@@ -61,6 +68,7 @@ body { font-family: 'Noto Sans TC', sans-serif; background-color: #f4f6f9; color
     }
 </script>
 
+<!-- 頂部導航 (標誌使用 image_a1ff3b.png) -->
 <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
         <div class="flex items-center space-x-4">
@@ -75,15 +83,17 @@ body { font-family: 'Noto Sans TC', sans-serif; background-color: #f4f6f9; color
 </header>
 
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow w-full">
+    <!-- 標題部分 (參考 image_a215d8.png 樣式) -->
     <div class="mb-12">
         <h1 class="text-3xl md:text-4xl font-black text-slate-900 mb-2 tracking-tight">
             投資研究報告 <span class="text-2xl text-slate-400 font-bold block sm:inline mt-2 sm:mt-0 sm:ml-2">Investment Research</span>
         </h1>
     </div>
 
+    <!-- 13 篇報告卡片網格 -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-        <!-- 1. NVDA -->
+        <!-- 1. NVIDIA -->
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm card-hover flex flex-col h-full cursor-pointer group" onclick="window.location.href='nvda.html'">
             <div class="flex xl:flex-row flex-col justify-between xl:items-center items-start gap-2 mb-6">
                 <span class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1.5 rounded-full">半導體 / AI 晶片</span>
@@ -100,7 +110,7 @@ body { font-family: 'Noto Sans TC', sans-serif; background-color: #f4f6f9; color
             </div>
         </div>
 
-        <!-- 2. MCD -->
+        <!-- 2. McDonald's -->
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm card-hover flex flex-col h-full cursor-pointer group" onclick="window.location.href='mcd.html'">
             <div class="flex xl:flex-row flex-col justify-between xl:items-center items-start gap-2 mb-6">
                 <span class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1.5 rounded-full">餐飲 / 跨國連鎖</span>
@@ -134,7 +144,7 @@ body { font-family: 'Noto Sans TC', sans-serif; background-color: #f4f6f9; color
             </div>
         </div>
 
-        <!-- 4. PLTR -->
+        <!-- 4. Palantir -->
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm card-hover flex flex-col h-full cursor-pointer group" onclick="window.location.href='pltr.html'">
             <div class="flex xl:flex-row flex-col justify-between xl:items-center items-start gap-2 mb-6">
                 <span class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1.5 rounded-full">大數據 / AI 軟體</span>
@@ -151,7 +161,7 @@ body { font-family: 'Noto Sans TC', sans-serif; background-color: #f4f6f9; color
             </div>
         </div>
 
-        <!-- 5. META -->
+        <!-- 5. Meta -->
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm card-hover flex flex-col h-full cursor-pointer group" onclick="window.location.href='meta.html'">
             <div class="flex xl:flex-row flex-col justify-between xl:items-center items-start gap-2 mb-6">
                 <span class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1.5 rounded-full">社交媒體 / AI</span>
@@ -161,14 +171,14 @@ body { font-family: 'Noto Sans TC', sans-serif; background-color: #f4f6f9; color
                 <h2 class="text-2xl font-black text-slate-900">Meta Platforms</h2>
                 <h3 class="text-xl font-bold text-blue-600 mt-1">META</h3>
             </div>
-            <p class="text-sm text-slate-600 line-clamp-3 mb-8 flex-grow leading-relaxed">廣告營收大增 33%，資本支出上調至 1,450 億美元以建置 AI 算力。Muse Spark 模型大幅提升互動率...</p>
+            <p class="text-sm text-slate-600 line-clamp-3 mb-8 flex-grow leading-relaxed">廣告營收大增 33%，資本支出上調至 1,450 億美元以建置 AI 算力。Muse Spark 模型大幅提升 Meta AI 能力...</p>
             <div class="pt-4 border-t border-slate-100 flex flex-wrap justify-between items-center mt-auto gap-2">
                 <span class="bg-emerald-50 text-emerald-700 text-sm font-bold px-3 py-1.5 rounded">評級：買入</span>
                 <span class="text-blue-600 text-sm font-bold flex items-center group-hover:text-blue-800 transition-colors">閱讀報告 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" stroke-width="2" /></svg></span>
             </div>
         </div>
 
-        <!-- 6. MSFT -->
+        <!-- 6. Microsoft -->
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm card-hover flex flex-col h-full cursor-pointer group" onclick="window.location.href='msft.html'">
             <div class="flex xl:flex-row flex-col justify-between xl:items-center items-start gap-2 mb-6">
                 <span class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1.5 rounded-full">科技 / AI 基礎設施</span>
@@ -178,14 +188,14 @@ body { font-family: 'Noto Sans TC', sans-serif; background-color: #f4f6f9; color
                 <h2 class="text-2xl font-black text-slate-900">微軟 <span class="text-lg font-bold text-slate-400 ml-1">Microsoft</span></h2>
                 <h3 class="text-xl font-bold text-blue-600 mt-1">MSFT</h3>
             </div>
-            <p class="text-sm text-slate-600 line-clamp-3 mb-8 flex-grow leading-relaxed">開源模型及相關應用年化營收突破 370 億美元，Azure 強勢增長 40%。資本支出大幅擴張...</p>
+            <p class="text-sm text-slate-600 line-clamp-3 mb-8 flex-grow leading-relaxed">開源模型相關應用營收突破 370 億美元，Azure 強勢增長 40%。資本支出大幅擴張以穩固 AI 護城河...</p>
             <div class="pt-4 border-t border-slate-100 flex flex-wrap justify-between items-center mt-auto gap-2">
                 <span class="bg-emerald-50 text-emerald-700 text-sm font-bold px-3 py-1.5 rounded">評級：增持</span>
                 <span class="text-blue-600 text-sm font-bold flex items-center group-hover:text-blue-800 transition-colors">閱讀報告 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" stroke-width="2" /></svg></span>
             </div>
         </div>
 
-        <!-- 7. AAPL -->
+        <!-- 7. Apple -->
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm card-hover flex flex-col h-full cursor-pointer group" onclick="window.location.href='aapl.html'">
             <div class="flex xl:flex-row flex-col justify-between xl:items-center items-start gap-2 mb-6">
                 <span class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1.5 rounded-full">消費電子 / AI</span>
@@ -202,7 +212,7 @@ body { font-family: 'Noto Sans TC', sans-serif; background-color: #f4f6f9; color
             </div>
         </div>
 
-        <!-- 8. AMZN -->
+        <!-- 8. Amazon -->
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm card-hover flex flex-col h-full cursor-pointer group" onclick="window.location.href='amzn.html'">
             <div class="flex xl:flex-row flex-col justify-between xl:items-center items-start gap-2 mb-6">
                 <span class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1.5 rounded-full">電商 / AWS 雲端</span>
@@ -212,14 +222,14 @@ body { font-family: 'Noto Sans TC', sans-serif; background-color: #f4f6f9; color
                 <h2 class="text-2xl font-black text-slate-900">亞馬遜 <span class="text-lg font-bold text-slate-400 ml-1">Amazon</span></h2>
                 <h3 class="text-xl font-bold text-blue-600 mt-1">AMZN</h3>
             </div>
-            <p class="text-sm text-slate-600 line-clamp-3 mb-8 flex-grow leading-relaxed">AWS 營收達 376 億美元年增 28%。資本支出大幅擴張至 593 億美元以建置 AI 算力...</p>
+            <p class="text-sm text-slate-600 line-clamp-3 mb-8 flex-grow leading-relaxed">AWS 營收達 376 億美元年增 28%，創近 15 季新高。資本支出大幅擴張至 593 億美元以建置 AI 算力...</p>
             <div class="pt-4 border-t border-slate-100 flex flex-wrap justify-between items-center mt-auto gap-2">
                 <span class="bg-emerald-50 text-emerald-700 text-sm font-bold px-3 py-1.5 rounded">評級：買入</span>
                 <span class="text-blue-600 text-sm font-bold flex items-center group-hover:text-blue-800 transition-colors">閱讀報告 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" stroke-width="2" /></svg></span>
             </div>
         </div>
 
-        <!-- 9. GOOGL -->
+        <!-- 9. Alphabet -->
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm card-hover flex flex-col h-full cursor-pointer group" onclick="window.location.href='googl.html'">
             <div class="flex xl:flex-row flex-col justify-between xl:items-center items-start gap-2 mb-6">
                 <span class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1.5 rounded-full">數位廣告 / 雲端</span>
@@ -229,14 +239,14 @@ body { font-family: 'Noto Sans TC', sans-serif; background-color: #f4f6f9; color
                 <h2 class="text-2xl font-black text-slate-900">Alphabet</h2>
                 <h3 class="text-xl font-bold text-blue-600 mt-1">GOOGL</h3>
             </div>
-            <p class="text-sm text-slate-600 line-clamp-3 mb-8 flex-grow leading-relaxed">Google Cloud 營收大增 63% 突破 200 億美元，Gemini 帶動訂閱與企業端活躍度...</p>
+            <p class="text-sm text-slate-600 line-clamp-3 mb-8 flex-grow leading-relaxed">Google Cloud 營收大增 63% 突破 200 億美元，Gemini 帶動訂閱活躍度。今年資本支出上調...</p>
             <div class="pt-4 border-t border-slate-100 flex flex-wrap justify-between items-center mt-auto gap-2">
                 <span class="bg-emerald-50 text-emerald-700 text-sm font-bold px-3 py-1.5 rounded">評級：買入</span>
                 <span class="text-blue-600 text-sm font-bold flex items-center group-hover:text-blue-800 transition-colors">閱讀報告 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" stroke-width="2" /></svg></span>
             </div>
         </div>
 
-        <!-- 10. TSLA -->
+        <!-- 10. Tesla -->
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm card-hover flex flex-col h-full cursor-pointer group" onclick="window.location.href='tsla.html'">
             <div class="flex xl:flex-row flex-col justify-between xl:items-center items-start gap-2 mb-6">
                 <span class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1.5 rounded-full">新能源汽車 / AI</span>
@@ -246,14 +256,14 @@ body { font-family: 'Noto Sans TC', sans-serif; background-color: #f4f6f9; color
                 <h2 class="text-2xl font-black text-slate-900">特斯拉 <span class="text-lg font-bold text-slate-400 ml-1">Tesla</span></h2>
                 <h3 class="text-xl font-bold text-blue-600 mt-1">TSLA</h3>
             </div>
-            <p class="text-sm text-slate-600 line-clamp-3 mb-8 flex-grow leading-relaxed">交付量不及預期與嚴重庫存積壓，戰略重心全面轉向 AI 算力與 Robotaxi，面臨轉型陣痛期...</p>
+            <p class="text-sm text-slate-600 line-clamp-3 mb-8 flex-grow leading-relaxed">交付量不及預期與嚴重庫存積壓，戰略重心全面轉向 AI 算力與 Robotaxi，面臨重資產轉型陣痛期...</p>
             <div class="pt-4 border-t border-slate-100 flex flex-wrap justify-between items-center mt-auto gap-2">
                 <span class="bg-slate-100 text-slate-600 text-sm font-bold px-3 py-1.5 rounded">評級：中性</span>
                 <span class="text-blue-600 text-sm font-bold flex items-center group-hover:text-blue-800 transition-colors">閱讀報告 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" stroke-width="2" /></svg></span>
             </div>
         </div>
 
-        <!-- 11. AVGO -->
+        <!-- 11. Broadcom -->
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm card-hover flex flex-col h-full cursor-pointer group" onclick="window.location.href='avgo.html'">
             <div class="flex xl:flex-row flex-col justify-between xl:items-center items-start gap-2 mb-6">
                 <span class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1.5 rounded-full">科技板塊 / 半導體</span>
@@ -263,14 +273,14 @@ body { font-family: 'Noto Sans TC', sans-serif; background-color: #f4f6f9; color
                 <h2 class="text-2xl font-black text-slate-900">博通 <span class="text-lg font-bold text-slate-400 ml-1">Broadcom</span></h2>
                 <h3 class="text-xl font-bold text-blue-600 mt-1">AVGO</h3>
             </div>
-            <p class="text-sm text-slate-600 line-clamp-3 mb-8 flex-grow leading-relaxed">受惠於 Custom ASIC 與 AI 網路需求爆發，展現出極強的現金流與 VMware 併購整合能力...</p>
+            <p class="text-sm text-slate-600 line-clamp-3 mb-8 flex-grow leading-relaxed">受惠於 Custom ASIC 與 AI 網路交換器需求爆發，展現出極強的現金流與高質量 VMware 併購整合能力...</p>
             <div class="pt-4 border-t border-slate-100 flex flex-wrap justify-between items-center mt-auto gap-2">
                 <span class="bg-emerald-50 text-emerald-700 text-sm font-bold px-3 py-1.5 rounded">評級：買入</span>
                 <span class="text-blue-600 text-sm font-bold flex items-center group-hover:text-blue-800 transition-colors">閱讀報告 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" stroke-width="2" /></svg></span>
             </div>
         </div>
 
-        <!-- 12. ORCL -->
+        <!-- 12. Oracle -->
         <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm card-hover flex flex-col h-full cursor-pointer group" onclick="window.location.href='orcl.html'">
             <div class="flex xl:flex-row flex-col justify-between xl:items-center items-start gap-2 mb-6">
                 <span class="bg-slate-100 text-slate-600 text-xs font-bold px-3 py-1.5 rounded-full">科技 / AI 基礎設施</span>
@@ -280,7 +290,7 @@ body { font-family: 'Noto Sans TC', sans-serif; background-color: #f4f6f9; color
                 <h2 class="text-2xl font-black text-slate-900">甲骨文 <span class="text-lg font-bold text-slate-400 ml-1">Oracle</span></h2>
                 <h3 class="text-xl font-bold text-blue-600 mt-1">ORCL</h3>
             </div>
-            <p class="text-sm text-slate-600 line-clamp-3 mb-8 flex-grow leading-relaxed">從傳統數據庫巨頭轉型為 AI 時代核心基礎設施商，雲端業務迎來爆發成長與利潤擴張...</p>
+            <p class="text-sm text-slate-600 line-clamp-3 mb-8 flex-grow leading-relaxed">從傳統數據庫巨頭轉型為 AI 時代的核心基礎設施提供商，雲端業務迎來爆發性成長與利潤率擴張...</p>
             <div class="pt-4 border-t border-slate-100 flex flex-wrap justify-between items-center mt-auto gap-2">
                 <span class="bg-emerald-50 text-emerald-700 text-sm font-bold px-3 py-1.5 rounded">評級：強力買入</span>
                 <span class="text-blue-600 text-sm font-bold flex items-center group-hover:text-blue-800 transition-colors">閱讀報告 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" stroke-width="2" /></svg></span>
@@ -297,7 +307,7 @@ body { font-family: 'Noto Sans TC', sans-serif; background-color: #f4f6f9; color
                 <h2 class="text-2xl font-black text-slate-900">蔚來 <span class="text-lg font-bold text-slate-400 ml-1">NIO</span></h2>
                 <h3 class="text-xl font-bold text-blue-600 mt-1">NIO</h3>
             </div>
-            <p class="text-sm text-slate-600 line-clamp-3 mb-8 flex-grow leading-relaxed">憑藉子品牌「樂道」切入大眾市場，換電聯盟 (BaaS) 擴大為其帶來獨特護城河與服務收入...</p>
+            <p class="text-sm text-slate-600 line-clamp-3 mb-8 flex-grow leading-relaxed">憑藉子品牌「樂道」切入大眾市場，換電聯盟 (BaaS) 的擴大為其帶來獨特護城河與服務收入...</p>
             <div class="pt-4 border-t border-slate-100 flex flex-wrap justify-between items-center mt-auto gap-2">
                 <span class="bg-emerald-50 text-emerald-700 text-sm font-bold px-3 py-1.5 rounded">評級：買入</span>
                 <span class="text-blue-600 text-sm font-bold flex items-center group-hover:text-blue-800 transition-colors">閱讀報告 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" stroke-width="2" /></svg></span>
